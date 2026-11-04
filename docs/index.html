@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marama Iti</title>
+<meta name="description" content="Assistant simplifié pour smartphone, en reo tahiti et en français.">
+<meta name="theme-color" content="#0b7a80">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap">
+<style>
+/* Layout: one-column phone app, big tap targets; Tahitian line on top, French line beneath in "both" mode */
+:root{
+  --bg:#f3f8f7; --surface:#ffffff; --ink:#0d2b33; --muted:#4b6670; --line:#cfe0de;
+  --lagoon:#0b7a80; --lagoon-ink:#ffffff; --lagoon-soft:#d9efee;
+  --sun:#ffe27a; --sun-line:#c79a00;
+  --alert:#b3261e; --alert-soft:#fde4e1; --ok:#1f7a3a; --ok-soft:#dff3e5;
+  --display:"Bricolage Grotesque", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --scale:1;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a1b20; --surface:#11272e; --ink:#e8f3f2; --muted:#a3bfc3; --line:#24434b;
+  --lagoon:#38b6bb; --lagoon-ink:#04191c; --lagoon-soft:#143a40;
+  --sun:#6b5300; --sun-line:#f0c430;
+  --alert:#ff8a80; --alert-soft:#3b1714; --ok:#7fd99a; --ok-soft:#12301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a1b20; --surface:#11272e; --ink:#e8f3f2; --muted:#a3bfc3; --line:#24434b;
+  --lagoon:#38b6bb; --lagoon-ink:#04191c; --lagoon-soft:#143a40;
+  --sun:#6b5300; --sun-line:#f0c430;
+  --alert:#ff8a80; --alert-soft:#3b1714; --ok:#7fd99a; --ok-soft:#12301c; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:calc(19px * var(--scale));line-height:1.45;-webkit-tap-highlight-color:transparent}
+.app{max-width:560px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+button,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:4px solid var(--sun-line);outline-offset:2px}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--lagoon)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--lagoon);color:var(--lagoon-ink);
+  padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:10px}
+.brand{flex:1;min-width:0}
+.brand h1{font-family:var(--display);font-weight:800;font-size:1.25em;margin:0;line-height:1.1}
+.brand p{margin:0;font-size:.75em;opacity:.9}
+.hbtn{background:transparent;border:2px solid currentColor;border-radius:14px;min-height:48px;min-width:48px;padding:6px 10px;display:flex;align-items:center;gap:6px;font-weight:700;font-size:.8em}
+.hbtn[aria-pressed="true"]{background:var(--lagoon-ink);color:var(--lagoon)}
+.hbtn svg{width:24px;height:24px}
+
+/* language + size bar */
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--surface)}
+.seg{display:flex;border:2px solid var(--lagoon);border-radius:14px;overflow:hidden;flex:1;min-width:240px}
+.seg button{flex:1;border:0;background:transparent;padding:8px 6px;font-weight:700;font-size:.8em;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--lagoon);color:var(--lagoon-ink)}
+.sizes{display:flex;gap:6px}
+.sizes button{border:2px solid var(--line);background:var(--bg);border-radius:12px;min-width:48px;min-height:44px;font-weight:700}
+
+main{flex:1;padding-block:16px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+
+/* bilingual text */
+.ty,.fr{display:block}
+.both .fr{font-size:.82em;color:var(--muted);font-weight:400}
+.both .on-lagoon .fr,.both .tile.hot .fr{color:inherit;opacity:.85}
+.mode-fr .ty,.mode-ty .fr{display:none}
+
+.hello{display:flex;gap:12px;align-items:center}
+.hello h2{font-family:var(--display);font-size:1.6em;margin:0;line-height:1.1}
+.hello p{margin:2px 0 0}
+.sunmark{width:56px;height:56px;flex:none;border-radius:50%;background:var(--sun);border:3px solid var(--sun-line);display:grid;place-items:center}
+.sunmark svg{width:30px;height:30px}
+
+.tile{width:100%;text-align:left;background:var(--surface);border:3px solid var(--line);border-radius:20px;padding:16px;display:flex;align-items:center;gap:14px;min-height:96px}
+.tile:active{transform:scale(.985)}
+.tile .ic{width:60px;height:60px;flex:none;border-radius:16px;display:grid;place-items:center;background:var(--lagoon-soft);color:var(--lagoon)}
+.tile .ic svg{width:34px;height:34px}
+.tile strong{font-size:1.1em;line-height:1.2;display:block}
+.tile .txt{flex:1;min-width:0}
+.tile .txt small{display:block;margin-top:4px;color:var(--muted);font-size:.85em}
+.tile.hot{border-color:var(--lagoon)}
+.tile.sos{border-color:var(--alert);background:var(--alert-soft)}
+.tile.sos .ic{background:var(--alert);color:var(--surface)}
+
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:16px}
+.card h3{margin:0 0 6px;font-family:var(--display);font-size:1.15em}
+textarea{width:100%;box-sizing:border-box;min-height:140px;border:3px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);resize:vertical;font-size:1em}
+textarea:focus{border-color:var(--lagoon);outline:none}
+.big{width:100%;border:0;border-radius:16px;background:var(--lagoon);color:var(--lagoon-ink);font-weight:700;font-size:1.1em;min-height:60px;padding:10px 14px}
+.ghost{width:100%;border:3px solid var(--line);border-radius:16px;background:var(--surface);font-weight:700;min-height:56px;padding:8px 12px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips button{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px;text-align:left;font-weight:700;font-size:.85em;min-height:56px}
+.chips button[aria-pressed="true"]{border-color:var(--lagoon);background:var(--lagoon-soft)}
+.label{font-weight:700;margin:0 0 6px}
+
+.readout{font-size:1.05em;line-height:1.7}
+mark.j{background:var(--sun);color:var(--ink);border-bottom:3px solid var(--sun-line);border-radius:6px;padding:1px 4px;font-weight:700;cursor:pointer}
+.warn{background:var(--alert-soft);border:3px solid var(--alert);border-radius:16px;padding:14px;display:flex;gap:10px;font-weight:700}
+.warn svg{width:30px;height:30px;flex:none;color:var(--alert)}
+.plain{background:var(--ok-soft);border:3px solid var(--ok);border-radius:16px;padding:14px}
+.plain h3{color:var(--ok)}
+.terms{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.terms li{border-left:6px solid var(--sun-line);padding:6px 10px;background:var(--bg);border-radius:0 10px 10px 0}
+.terms b{display:block}
+
+/* guide */
+.progress{height:14px;border-radius:8px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--lagoon);transition:width .3s}
+.stepvis{display:grid;place-items:center;min-height:150px;border-radius:18px;background:var(--lagoon-soft);color:var(--lagoon)}
+.stepvis svg{width:84px;height:84px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.count{font-weight:700;color:var(--muted)}
+
+.contact{display:flex;align-items:center;gap:12px;border:3px solid var(--line);border-radius:18px;padding:14px;background:var(--surface)}
+.contact .who{flex:1;min-width:0}
+.contact .num{font-size:1.3em;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;user-select:all}
+.contact .call{background:var(--ok);color:var(--surface);border:0;border-radius:50%;width:64px;height:64px;display:grid;place-items:center;flex:none}
+.contact .call svg{width:30px;height:30px}
+.emerg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.emerg a{color:inherit;text-decoration:none;display:block;border:3px solid var(--alert);border-radius:16px;text-align:center;padding:10px 4px;background:var(--surface)}
+.emerg b{display:block;font-size:2em;font-family:var(--display);color:var(--alert);font-variant-numeric:tabular-nums}
+.note{font-size:.8em;color:var(--muted)}
+
+/* bottom nav */
+nav.bottom{position:sticky;bottom:0;background:var(--surface);border-top:2px solid var(--line);display:flex;padding-block:6px calc(6px + env(safe-area-inset-bottom,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+nav.bottom button{flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:12px;font-weight:700;font-size:.72em;min-height:60px;color:var(--muted)}
+nav.bottom button svg{width:28px;height:28px}
+nav.bottom button[aria-current="page"]{color:var(--lagoon);background:var(--lagoon-soft)}
+
+/* sheet */
+.sheet{position:fixed;inset:0;background:rgba(5,20,24,.6);display:flex;align-items:flex-end;justify-content:center;z-index:20;padding:16px}
+.sheet .panel{background:var(--surface);border:4px solid var(--sun-line);border-radius:24px;max-width:520px;width:100%;padding:20px;display:flex;flex-direction:column;gap:12px;margin-bottom:env(safe-area-inset-bottom,0px)}
+.sheet h3{font-family:var(--display);font-size:1.4em;margin:0}
+.sheet .def{background:var(--bg);border-radius:14px;padding:14px;font-size:1.05em}
+.sheet .def .ty{font-weight:700;margin-bottom:6px}
+.both .sheet .def .fr{font-size:1em;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Polynesian illustrations */
+:root{--sky:#c4e8ea;--sunf:#ffd34d;--m2:#3a8a63;--m1:#22604a;--sea:#0e8a90;--sand:#f1dca7;--trunk:#8a5a2b;--frond:#2f8f4e;--hull:#6b3e1f;--foam:#ffffff;--petal:#fffdf6;--heart:#f2c230}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sky:#0f2a33;--sunf:#f2ead0;--m2:#1f4d3e;--m1:#163a2f;--sea:#0d4f57;--sand:#6f6142;--trunk:#6b4a2a;--frond:#2a6b42;--hull:#c49165;--foam:#8ccfd2;--petal:#fffdf6;--heart:#f2c230}}
+:root[data-theme="dark"]{--sky:#0f2a33;--sunf:#f2ead0;--m2:#1f4d3e;--m1:#163a2f;--sea:#0d4f57;--sand:#6f6142;--trunk:#6b4a2a;--frond:#2a6b42;--hull:#c49165;--foam:#8ccfd2;--petal:#fffdf6;--heart:#f2c230}
+.scene{display:block;width:100%;height:auto}
+.scene .sky{fill:var(--sky)}.scene .sunf{fill:var(--sunf)}.scene .mount2{fill:var(--m2)}.scene .mount{fill:var(--m1)}
+.scene .sea{fill:var(--sea)}.scene .sand{fill:var(--sand)}.scene .frond{fill:var(--frond)}.scene .hull{fill:var(--hull)}
+.scene .trunk{fill:none;stroke:var(--trunk);stroke-width:5;stroke-linecap:round}
+.scene .wave{fill:none;stroke:var(--foam);stroke-width:2;stroke-linecap:round;opacity:.8}
+.scene .rig{fill:none;stroke:var(--hull);stroke-width:2.2;stroke-linecap:round}
+.tiare .petal{fill:var(--petal);stroke:var(--heart);stroke-width:1}.tiare .heart{fill:var(--heart)}
+.logo{width:44px;height:44px;flex:none}.logo svg{width:100%;height:100%}
+.hero{border:2px solid var(--line);border-radius:22px;overflow:hidden;background:var(--surface)}
+.hero .hello{display:block;padding:12px 16px 16px}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:var(--lagoon);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 0L10 10L20 0z'/%3E%3C/svg%3E") repeat-x;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 0L10 10L20 0z'/%3E%3C/svg%3E") repeat-x}
+.bar{padding-top:18px}
+.sheet .stepvis .tiare{width:100px;height:100px}
+</style>
+</head>
+<body>
+<div class="app both" id="app">
+  <header class="top">
+    <button class="hbtn" id="backBtn" hidden aria-label="Retour"></button>
+    <span class="logo"><svg class="tiare" viewBox="-30 -30 60 60" aria-hidden="true"><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(12)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(84)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(156)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(228)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(300)" class="petal"/><circle r="5" class="heart"/></svg></span>
+    <div class="brand on-lagoon">
+      <h1>Marama Iti</h1>
+      <p data-s="tagline"></p>
+    </div>
+    <button class="hbtn" id="voiceBtn" aria-pressed="false"></button>
+  </header>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Langue / Reo">
+      <button data-lang="ty" aria-pressed="false">Reo Tahiti</button>
+      <button data-lang="both" aria-pressed="true">Les deux</button>
+      <button data-lang="fr" aria-pressed="false">Français</button>
+    </div>
+    <div class="sizes">
+      <button id="smaller" aria-label="Texte plus petit">A−</button>
+      <button id="bigger" aria-label="Texte plus grand">A+</button>
+    </div>
+  </div>
+
+  <main id="view"></main>
+
+  <nav class="bottom" id="nav"></nav>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <h3 id="sheetTitle"></h3>
+    <div id="sheetBody"></div>
+    <button class="big" id="sheetClose"></button>
+  </div>
+</div>
+
+<script>
+/* ---------- icons ---------- */
+const P = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  doc:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>',
+  help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  next:'<path d="M9 5l7 7-7 7"/>',
+  speaker:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',
+  camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  circle:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/>',
+  send:'<path d="M3 11l18-8-8 18-2-8z"/>',
+  ring:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/><path d="M15 3a6 6 0 0 1 6 6M15 6.5a2.5 2.5 0 0 1 2.5 2.5"/>',
+  hang:'<path d="M3 14c5-5 13-5 18 0l-2.5 2.5-3-1.5v-2.5a10 10 0 0 0-7 0V15l-3 1.5z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'
+};
+const TIARE = '<svg class="tiare" viewBox="-30 -30 60 60" aria-hidden="true"><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(12)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(84)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(156)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(228)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(300)" class="petal"/><circle r="5" class="heart"/></svg>';
+const SCENE = '<svg class="scene" viewBox="0 0 360 150" role="img" aria-label="Montagnes de Tahiti, lagon, cocotier et pirogue"><rect width="360" height="150" class="sky"/><circle cx="292" cy="40" r="20" class="sunf"/><path class="mount2" d="M0 112 L38 72 L66 86 L108 38 L132 58 L160 26 L192 72 L232 60 L272 96 L360 102 V150 H0Z"/><path class="mount" d="M0 122 L48 96 L84 106 L120 76 L150 99 L200 90 L250 110 L300 106 L360 118 V150 H0Z"/><path class="sea" d="M0 118 Q90 112 180 118 T360 118 V150 H0Z"/><path class="wave" d="M20 134 q10 -5 20 0 t20 0 M70 144 q10 -5 20 0 t20 0 M200 140 q10 -5 20 0 t20 0"/><ellipse cx="318" cy="128" rx="36" ry="6" class="sand"/><path class="trunk" d="M318 127 Q323 100 312 78"/><path class="frond" d="M312 78 q-18 -14 -38 -4 q20 -2 38 4z M312 78 q-20 2 -32 20 q14 -12 32 -20z M312 78 q14 -18 34 -14 q-18 2 -34 14z M312 78 q22 -2 32 16 q-14 -10 -32 -16z M312 78 q-2 -20 10 -30 q-6 14 -10 30z"/><path class="hull" d="M118 124 q32 6 66 0 l-5 6 q-28 4 -56 0z"/><path class="rig" d="M132 124 l5 -9 M168 124 l5 -9 M135 115 h41 M152 113 v10 M144 110 l16 20"/><circle cx="152" cy="109" r="3.2" class="hull"/></svg>';
+const ic = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+
+/* ---------- textes de l'interface : { ty, fr } ----------
+   Les phrases en reo tahiti sont à faire relire par un locuteur natif. */
+const S = {
+  tagline:{ty:"To 'oe tauturu 'ohie",fr:"Votre assistant simplifié"},
+  greet:{ty:"Ia ora na !",fr:"Bonjour !"},
+  sub:{ty:"E aha tā 'oe e hina'aro e rave i teie mahana ?",fr:"Que voulez-vous faire aujourd'hui ?"},
+  simpT:{ty:"Fa'a'ohie i te parau fifi",fr:"Comprendre un texte difficile"},
+  simpD:{ty:"Tu'u mai i te parau, e fa'ata'a vau i te mau ta'o fifi.",fr:"Collez un message, j'explique les mots compliqués."},
+  guideT:{ty:"Te mau ha'api'ira'a",fr:"Apprendre pas à pas"},
+  guideD:{ty:"Hāpono i te hōho'a, 'ite i te parau ha'avare…",fr:"Envoyer une photo, repérer une arnaque…"},
+  callT:{ty:"Pi'i i te hō'ē fēti'i",fr:"Appeler un proche"},
+  callD:{ty:"To 'oe mau fēti'i, nūmera rarahi.",fr:"Vos proches, en gros numéros."},
+  sosT:{ty:"Tauturu rū",fr:"Besoin d'aide urgente ?"},
+  sosD:{ty:"Te mau nūmera rū.",fr:"Numéros d'urgence et famille."},
+  back:{ty:"Ho'i",fr:"Retour"}, next:{ty:"I mua",fr:"Suivant"}, prev:{ty:"I muri",fr:"Précédent"},
+  finish:{ty:"Ua oti",fr:"Terminé"}, close:{ty:"'Ōpani",fr:"Fermer"}, got:{ty:"Ua ta'a ia'u",fr:"J'ai compris"},
+  listen:{ty:"Fa'aro'o",fr:"Écouter"},
+  navHome:{ty:"Fare",fr:"Accueil"}, navText:{ty:"Parau",fr:"Textes"}, navGuide:{ty:"Ha'api'i",fr:"Guides"},
+  paste:{ty:"Tu'u i te parau i 'ō nei…",fr:"Collez ou écrivez le texte ici…"},
+  explain:{ty:"Fa'ata'a mai",fr:"Expliquer ce texte"},
+  examples:{ty:"E aore ra, mā'iti i te hō'ē hi'ora'a :",fr:"Ou choisissez un exemple :"},
+  tapHint:{ty:"Pāta'i i te ta'o re'are'a.",fr:"Touchez un mot jaune pour l'explication."},
+  found:{ty:"Te mau ta'o i fa'ata'ahia",fr:"Les mots expliqués"},
+  none:{ty:"'Aita e ta'o fifi i 'itehia. Mai te mea e fifi, ani i te hō'ē fēti'i.",fr:"Aucun mot difficile trouvé. Si un mot vous gêne, demandez à un proche."},
+  plain:{ty:"Ma te parau 'ohie",fr:"En clair"},
+  scam:{ty:"Ara ! E ani teie parau ia pāta'i e ia 'aufau. E parau ha'avare pinepine teie.",fr:"Attention : ce message demande de cliquer ou de payer. C'est souvent une arnaque."},
+  yourText:{ty:"To 'oe parau",fr:"Votre texte"},
+  step:{ty:"Tāpura",fr:"Étape"},
+  bravo:{ty:"Maita'i roa ! Ua oti.",fr:"Bravo ! Vous avez terminé."},
+  callNow:{ty:"Pi'i i teie nūmera",fr:"Composez ce numéro"},
+  callNote:{ty:"",fr:""},
+  emerg:{ty:"Nūmera rū",fr:"Urgences en Polynésie"},
+  samu:{ty:"Taote",fr:"SAMU"}, police:{ty:"Muto'i",fr:"Police / Gendarmerie"}, fire:{ty:"Tinai auahi",fr:"Pompiers"},
+  family:{ty:"To 'oe mau fēti'i",fr:"Votre famille"},
+  example:{ty:"hi'ora'a",fr:"exemple"},
+  voiceNote:{ty:"",fr:"La voix lit le reo tahiti avec une voix française : la prononciation reste approximative."}
+};
+
+/* ---------- dictionnaire du jargon ----------
+   re : expression cherchée dans le texte (minuscules, sans accents gérés par la recherche) */
+const DICT = [
+  {k:"code de vérification", alt:["code otp","code de confirmation","code de sécurité"], fr:"Un code à chiffres envoyé par SMS. Il prouve que c'est bien vous. Ne le donnez à personne.", ty:"E nūmera huna i hāponohia na roto i te SMS. Eiaha roa e horo'a i te ta'ata."},
+  {k:"authentification", alt:["s'authentifier","double authentification","vérification en deux étapes"], fr:"Prouver que c'est bien vous, avec un code ou votre doigt.", ty:"Fa'a'ite e o 'oe iho teie, na roto i te nūmera huna e aore ra to 'oe rima."},
+  {k:"identifiants", alt:["identifiant","login"], fr:"Votre nom de compte et votre mot de passe. Ils sont secrets.", ty:"To 'oe i'oa e to 'oe parau huna. E mea huna."},
+  {k:"mot de passe", alt:["code secret"], fr:"Le mot secret pour ouvrir votre compte. Ne le dites à personne.", ty:"Te parau huna no te iriti i to 'oe vāhi. Eiaha e parau i te ta'ata."},
+  {k:"espace personnel", alt:["espace client","espace dématérialisé","portail"], fr:"Votre page à vous sur internet, protégée par un mot de passe.", ty:"To 'oe iho 'api i ni'a i te itenati."},
+  {k:"dématérialisé", alt:["dématérialisée","en ligne"], fr:"Sur internet, sans papier.", ty:"I ni'a i te itenati, 'aita e parau pāpa'i."},
+  {k:"justificatif de domicile", alt:["attestation de domicile"], fr:"Un papier qui montre où vous habitez : facture EDT, d'eau ou de téléphone.", ty:"E parau e fa'a'ite i to 'oe fare : te parau 'aufau mōrī, pape e aore ra niuniu."},
+  {k:"attestation de droits", alt:["attestation cps"], fr:"Le papier de la CPS qui montre que vous êtes bien assuré.", ty:"Te parau a te CPS e fa'a'ite e ua pāruruhia 'oe."},
+  {k:"avis d'imposition", alt:["avis d'impôt"], fr:"Le papier des impôts reçu chaque année.", ty:"Te parau o te tute i te mau matahiti ato'a."},
+  {k:"feuille de soins", alt:[], fr:"Le papier donné par le médecin pour être remboursé par la CPS.", ty:"Te parau a te taote no te CPS."},
+  {k:"échéance", alt:["date limite"], fr:"La date à ne pas dépasser.", ty:"Te mahana hope'a."},
+  {k:"prélèvement automatique", alt:["prélèvement"], fr:"L'argent est pris tout seul sur votre compte, chaque mois.", ty:"E rave-noa-hia te moni i ni'a i to 'oe moni i te mau 'āva'e ato'a."},
+  {k:"virement", alt:[], fr:"Envoyer de l'argent d'un compte en banque à un autre.", ty:"Hāpono i te moni mai te hō'ē fare moni i te tahi."},
+  {k:"rib", alt:["iban"], fr:"Le papier avec le numéro de votre compte en banque.", ty:"Te parau e vai ai te nūmera o to 'oe moni i te fare moni."},
+  {k:"dédouanement", alt:["frais de douane","douane"], fr:"Une taxe pour les colis venus de l'étranger. L'OPT ne la demande jamais par un lien SMS.", ty:"E tute no te mau pū'ohu no rāpae mai. 'Aita te fare rata e ani na roto i te SMS."},
+  {k:"cliquez sur le lien", alt:["cliquer sur le lien","lien ci-joint","lien suivant","lien"], fr:"Un texte à toucher qui ouvre une page internet. Méfiez-vous des liens reçus par SMS.", ty:"E ta'o e iriti i te hō'ē 'api itenati. Ara i te mau tā'amu i roto i te SMS."},
+  {k:"pièce jointe", alt:[], fr:"Un fichier (photo, document) attaché à un message.", ty:"E hōho'a e aore ra e parau i tāpirihia i te poro'i."},
+  {k:"mise à jour", alt:["mettre à jour"], fr:"Le téléphone se répare et s'améliore tout seul.", ty:"Te fa'a'āpī nei te niuniu ia na iho."},
+  {k:"télécharger", alt:["téléchargement"], fr:"Faire venir un fichier d'internet dans le téléphone.", ty:"Huti mai i te hō'ē mea mai te itenati mai."},
+  {k:"téléverser", alt:["transmettre"], fr:"Envoyer un fichier du téléphone vers internet.", ty:"Hāpono i te hō'ē mea i ni'a i te itenati."},
+  {k:"wi-fi", alt:["wifi"], fr:"L'internet de la maison, sans fil.", ty:"Te itenati o te fare, 'aita e uaea."},
+  {k:"batterie", alt:[], fr:"La réserve d'énergie du téléphone. On la remplit avec le chargeur.", ty:"Te pūai o te niuniu. E fa'a'ī i te reira i te uaea."},
+  {k:"notification", alt:["notifications"], fr:"Un petit message qui apparaît en haut de l'écran.", ty:"E poro'i poto e tae mai i ni'a i te niuniu."},
+  {k:"application", alt:["appli"], fr:"Un programme sur le téléphone, comme Messages ou Photos.", ty:"E porotarama i ni'a i te niuniu."}
+];
+const fold = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[’]/g,"'");
+
+/* ---------- exemples locaux ---------- */
+const EX = [
+  {id:"cps", lbl:{ty:"CPS",fr:"Courrier CPS"}, text:"Votre dossier est incomplet. Veuillez transmettre votre justificatif de domicile et votre attestation de droits via votre espace personnel dématérialisé avant l'échéance du 30/11.",
+   plain:{fr:"La CPS veut un papier qui montre où vous habitez. Il faut l'envoyer avant le 30 novembre. Un proche peut vous aider à le faire sur internet.", ty:"Te hina'aro nei te CPS i te hō'ē parau e fa'a'ite i to 'oe fare. Hāpono hou te 30 no novema. E nehenehe te hō'ē fēti'i e tauturu ia 'oe."}},
+  {id:"bank", lbl:{ty:"Fare moni",fr:"Banque"}, text:"Pour finaliser l'authentification, saisissez le code de vérification reçu par SMS. Ne communiquez jamais vos identifiants.",
+   plain:{fr:"La banque vous envoie un code par SMS. Tapez ce code pour entrer. Ne donnez jamais ce code à personne, même au téléphone.", ty:"E hāpono te fare moni i te hō'ē nūmera huna na roto i te SMS. Pāpa'i i teie nūmera. Eiaha roa e horo'a i te ta'ata."}},
+  {id:"parcel", lbl:{ty:"Pū'ohu",fr:"SMS colis"}, text:"Votre colis est bloqué en douane. Cliquez sur le lien pour régler les frais de dédouanement de 1 200 XPF sous 24h.",
+   plain:{fr:"C'est sûrement une arnaque. L'OPT ne demande pas de payer par un lien dans un SMS. Ne touchez pas le lien et effacez le message.", ty:"E parau ha'avare paha teie. Eiaha e pāta'i i te tā'amu. Fa'a'ore i teie poro'i."}},
+  {id:"update", lbl:{ty:"Niuniu",fr:"Mise à jour"}, text:"Une mise à jour du système est disponible. Connectez-vous au Wi-Fi et vérifiez que la batterie est supérieure à 50 % avant de télécharger.",
+   plain:{fr:"Le téléphone veut se remettre à neuf. Faites-le à la maison, branché au chargeur et avec l'internet de la maison. Puis touchez « Installer ».", ty:"Te hina'aro nei te niuniu e fa'a'āpī ia na. Tu'u i te uaea i te fare, e pāta'i i « Installer »."}}
+];
+
+/* ---------- guides ---------- */
+const GUIDES = [
+  {id:"photo", icon:"camera", t:{ty:"Hāpono i te hōho'a",fr:"Envoyer une photo"}, steps:[
+    {i:"camera", t:{ty:"Iriti i te pata hōho'a",fr:"Ouvrir l'appareil photo"}, x:{ty:"Pāta'i i te tāpa'o mai te hō'ē pata hōho'a ri'i.",fr:"Touchez l'icône en forme de petit appareil photo."}},
+    {i:"circle", t:{ty:"Pata i te hōho'a",fr:"Prendre la photo"}, x:{ty:"Tāpe'a ti'a i te niuniu. Pāta'i i te menemene uouo rahi i raro.",fr:"Tenez le téléphone droit. Touchez le grand rond blanc en bas."}},
+    {i:"send", t:{ty:"Hāpono",fr:"Envoyer"}, x:{ty:"Pāta'i i « Partager », mā'iti i to 'oe fēti'i, e pāta'i i « Envoyer ».",fr:"Touchez « Partager », choisissez votre proche, puis touchez « Envoyer »."}}
+  ]},
+  {id:"scam", icon:"shield", t:{ty:"'Ite i te parau ha'avare",fr:"Repérer une arnaque"}, steps:[
+    {i:"alert", t:{ty:"E ani te hō'ē ta'ata i te moni ma te rū ?",fr:"On vous demande de l'argent vite ?"}, x:{ty:"Ara mai te mea e parau te poro'i : « Māmā, ua taui au i ta'u nūmera, hāpono mai i te moni ».",fr:"Méfiez-vous d'un message comme : « Maman, j'ai changé de numéro, envoie-moi de l'argent »."}},
+    {i:"phone", t:{ty:"Pi'i i te nūmera tahito",fr:"Rappelez l'ancien numéro"}, x:{ty:"Pi'i i to 'oe tamari'i i ni'a i tāna nūmera mātau.",fr:"Appelez votre enfant sur son numéro habituel pour vérifier."}},
+    {i:"link", t:{ty:"E tā'amu no te 'aufau ?",fr:"Un lien pour payer un colis ?"}, x:{ty:"'Aita te fare rata e ani i te 'aufau na roto i te SMS. Eiaha e pāta'i.",fr:"L'OPT ne demande pas de payer par SMS. Ne touchez pas le lien."}},
+    {i:"shield", t:{ty:"Mai te mea e fe'a'a",fr:"En cas de doute"}, x:{ty:"Eiaha e rave vitiviti. Pi'i i te hō'ē fēti'i ti'aturihia.",fr:"Ne faites rien tout de suite. Appelez un proche de confiance."}}
+  ]},
+  {id:"answer", icon:"ring", t:{ty:"Pāhono i te niuniu",fr:"Répondre à un appel"}, steps:[
+    {i:"ring", t:{ty:"Te ta'i nei te niuniu",fr:"Le téléphone sonne"}, x:{ty:"Hi'o i te i'oa i ni'a i te niuniu.",fr:"Regardez le nom ou le numéro sur l'écran."}},
+    {i:"phone", t:{ty:"Pāhono",fr:"Décrocher"}, x:{ty:"Fa'ahe'e i te pata matie i ni'a, e aore ra pāta'i.",fr:"Faites glisser le bouton vert vers le haut, ou touchez-le."}},
+    {i:"hang", t:{ty:"Fa'aoti",fr:"Raccrocher"}, x:{ty:"I te hope'a, pāta'i i te pata 'ute'ute.",fr:"À la fin, touchez le bouton rouge."}}
+  ]}
+];
+
+const CONTACTS = [
+  {n:"Marie", r:{ty:"Tamahine",fr:"Fille"}, num:"87 12 34 56"},
+  {n:"Teva", r:{ty:"Tamaiti",fr:"Fils"}, num:"89 65 43 21"},
+  {n:"Dr Tetuanui", r:{ty:"Taote",fr:"Médecin"}, num:"40 50 60 70"}
+];
+
+/* ---------- état ---------- */
+const st = {lang:"both", view:"home", ex:null, text:"", guide:null, step:0, voice:false, scale:1};
+try{const s=JSON.parse(localStorage.getItem("marama-iti")||"{}"); if(s.lang)st.lang=s.lang; if(s.scale)st.scale=s.scale;}catch(e){}
+const save=()=>{try{localStorage.setItem("marama-iti",JSON.stringify({lang:st.lang,scale:st.scale}))}catch(e){}};
+
+const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const T = o => {                       // bilingual markup
+  if(!o) return "";
+  if(!o.ty) return `<span class="fr">${o.fr}</span>`;
+  return `<span class="ty" lang="ty">${o.ty}</span><span class="fr" lang="fr">${o.fr}</span>`;
+};
+const plainTxt = o => st.lang==="ty" ? (o.ty||o.fr) : o.fr;   // text spoken aloud
+
+/* ---------- voix ---------- */
+function speak(text){
+  if(!st.voice || !("speechSynthesis" in window) || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "fr-FR"; u.rate = .85;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- détection du jargon ---------- */
+function analyse(raw){
+  const folded = fold(raw);
+  const hits = [];                     // {start,end,entry}
+  const pats = [];
+  DICT.forEach((d,idx)=>[d.k,...d.alt].forEach(p=>pats.push({p:fold(p),idx})));
+  pats.sort((a,b)=>b.p.length-a.p.length);
+  const taken = new Array(raw.length).fill(false);
+  pats.forEach(({p,idx})=>{
+    let from=0, pos;
+    while((pos=folded.indexOf(p,from))!==-1){
+      const end=pos+p.length;
+      const before=folded[pos-1], after=folded[end];
+      const word=/[a-z0-9]/;
+      const ok=(!before||!word.test(before))&&(!after||!word.test(after));
+      if(ok && !taken.slice(pos,end).some(Boolean)){
+        hits.push({start:pos,end,idx}); for(let i=pos;i<end;i++)taken[i]=true;
+      }
+      from=end;
+    }
+  });
+  hits.sort((a,b)=>a.start-b.start);
+  let html="",cur=0; const used=[];
+  hits.forEach(h=>{
+    html+=esc(raw.slice(cur,h.start));
+    html+=`<mark class="j" tabindex="0" role="button" data-d="${h.idx}">${esc(raw.slice(h.start,h.end))}</mark>`;
+    cur=h.end; if(!used.includes(h.idx))used.push(h.idx);
+  });
+  html+=esc(raw.slice(cur));
+  const scam = /(clique|touchez|lien)/.test(folded) && /(regl|pay|frais|xpf|€|carte bancaire|virement)/.test(folded);
+  return {html,used,scam};
+}
+
+/* ---------- vues ---------- */
+const V = {
+  home(){
+    return `
+    <section class="hero">
+      ${SCENE}
+      <div class="hello"><h2>${T(S.greet)}</h2><p>${T(S.sub)}</p></div>
+    </section>
+    <button class="tile hot" data-go="text"><span class="ic">${ic("doc")}</span><span class="txt"><strong>${T(S.simpT)}</strong><small>${T(S.simpD)}</small></span></button>
+    <button class="tile" data-go="guides"><span class="ic">${ic("compass")}</span><span class="txt"><strong>${T(S.guideT)}</strong><small>${T(S.guideD)}</small></span></button>
+    <button class="tile" data-go="calls"><span class="ic">${ic("phone")}</span><span class="txt"><strong>${T(S.callT)}</strong><small>${T(S.callD)}</small></span></button>
+    <button class="tile sos" data-go="sos"><span class="ic">${ic("help")}</span><span class="txt"><strong>${T(S.sosT)}</strong><small>${T(S.sosD)}</small></span></button>
+    <p class="note">${T(S.voiceNote)}</p>`;
+  },
+  text(){
+    const ex = EX.find(e=>e.id===st.ex);
+    let out = `
+    <div class="card">
+      <label class="label" for="src">${T(S.yourText)}</label>
+      <textarea id="src" placeholder="${esc(plainTxt(S.paste))}">${esc(st.text)}</textarea>
+      <div style="height:10px"></div>
+      <button class="big" id="go">${T(S.explain)}</button>
+    </div>
+    <div>
+      <p class="label">${T(S.examples)}</p>
+      <div class="chips">${EX.map(e=>`<button data-ex="${e.id}" aria-pressed="${st.ex===e.id}">${T(e.lbl)}</button>`).join("")}</div>
+    </div>`;
+    if(st.text.trim()){
+      const a = analyse(st.text);
+      if(a.scam) out += `<div class="warn" role="alert">${ic("alert")}<div>${T(S.scam)}</div></div>`;
+      out += `<div class="card"><p class="note">${T(S.tapHint)}</p><div class="readout">${a.html}</div></div>`;
+      if(ex && ex.text===st.text) out += `<div class="plain"><h3>${T(S.plain)}</h3><div class="readout">${T(ex.plain)}</div>
+        <div style="height:10px"></div><button class="ghost" data-say="plain">${T(S.listen)}</button></div>`;
+      out += `<div class="card"><h3>${T(S.found)}</h3>${a.used.length?`<ul class="terms">${a.used.map(i=>`<li><b>${esc(DICT[i].k)}</b>${T({ty:DICT[i].ty,fr:DICT[i].fr})}</li>`).join("")}</ul>`:`<p>${T(S.none)}</p>`}</div>`;
+    }
+    return out;
+  },
+  guides(){
+    if(!st.guide){
+      return `<h2 style="font-family:var(--display);margin:0">${T(S.guideT)}</h2>` +
+        GUIDES.map(g=>`<button class="tile" data-guide="${g.id}"><span class="ic">${ic(g.icon)}</span><span class="txt"><strong>${T(g.t)}</strong><small>${g.steps.length} × ${T({ty:"tāpura",fr:"étapes"})}</small></span></button>`).join("");
+    }
+    const g = GUIDES.find(x=>x.id===st.guide), s = g.steps[st.step], last = st.step===g.steps.length-1;
+    return `
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap">
+        <strong>${T(g.t)}</strong><span class="count">${st.step+1} / ${g.steps.length}</span>
+      </div>
+      <div class="progress"><i style="width:${(st.step+1)/g.steps.length*100}%"></i></div>
+      <div class="stepvis">${ic(s.i)}</div>
+      <h3 style="font-size:1.3em">${T(s.t)}</h3>
+      <div class="readout">${T(s.x)}</div>
+      <button class="ghost" data-say="step">${ic("speaker").replace('<svg','<svg style="width:24px;height:24px;vertical-align:middle"')} ${T(S.listen)}</button>
+      <div class="row">
+        <button class="ghost" id="prev" ${st.step===0?"disabled style=\"opacity:.45\"":""}>${T(S.prev)}</button>
+        <button class="big" id="nextStep">${T(last?S.finish:S.next)}</button>
+      </div>
+    </div>`;
+  },
+  calls(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.callT)}</h2>` +
+      CONTACTS.map((c,i)=>`<div class="contact"><div class="who"><strong>${esc(c.n)}</strong> · ${T(c.r)}<div class="num">${c.num}</div></div><a class="call" href="tel:${c.num.replace(/\s/g,"")}" aria-label="Appeler ${esc(c.n)}">${ic("phone")}</a></div>`).join("") +
+      `<p class="note">${T({ty:"",fr:"Numéros d'exemple : la famille pourra les remplacer par les vrais."})}</p>`;
+  },
+  sos(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.emerg)}</h2>
+      <div class="emerg">
+        <a href="tel:15"><b>15</b>${T(S.samu)}</a><a href="tel:17"><b>17</b>${T(S.police)}</a><a href="tel:18"><b>18</b>${T(S.fire)}</a>
+      </div>
+      <h3 style="font-family:var(--display);margin:6px 0 0">${T(S.family)}</h3>` +
+      CONTACTS.slice(0,2).map((c,i)=>`<div class="contact"><div class="who"><strong>${esc(c.n)}</strong> · ${T(c.r)}<div class="num">${c.num}</div></div><a class="call" href="tel:${c.num.replace(/\s/g,"")}" aria-label="Appeler ${esc(c.n)}">${ic("phone")}</a></div>`).join("");
+  }
+};
+
+/* ---------- rendu ---------- */
+const app = document.getElementById("app"), view = document.getElementById("view");
+function render(){
+  app.className = "app " + (st.lang==="both"?"both":"mode-"+st.lang);
+  document.body.style.setProperty("--scale", st.scale);
+  document.documentElement.style.setProperty("--scale", st.scale);
+  document.querySelectorAll("[data-s]").forEach(el=>el.innerHTML=T(S[el.dataset.s]));
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===st.lang));
+  const back = document.getElementById("backBtn");
+  back.hidden = st.view==="home" && !st.guide;
+  back.innerHTML = ic("back") + `<span>${plainTxt(S.back)}</span>`;
+  const vb = document.getElementById("voiceBtn");
+  vb.innerHTML = ic("speaker") + `<span>${plainTxt(S.listen)}</span>`;
+  vb.setAttribute("aria-pressed", st.voice);
+  view.innerHTML = V[st.view]();
+  document.getElementById("nav").innerHTML = [["home","home",S.navHome],["text","doc",S.navText],["guides","compass",S.navGuide]]
+    .map(([v,i,l])=>`<button data-go="${v}" ${st.view===v?'aria-current="page"':""}>${ic(i)}<span>${plainTxt(l)}</span></button>`).join("");
+  const src=document.getElementById("src");
+  if(src) src.addEventListener("input",e=>{st.text=e.target.value; st.ex=null;});
+}
+
+function go(v){ st.view=v; if(v!=="guides")st.guide=null; render(); scrollTo(0,0);
+  const titles={home:S.greet,text:S.simpT,guides:S.guideT,calls:S.callT,sos:S.sosT}; speak(plainTxt(titles[v])); }
+
+function sheet(title, bodyHTML, btn){
+  document.getElementById("sheetTitle").innerHTML = title;
+  document.getElementById("sheetBody").innerHTML = bodyHTML;
+  document.getElementById("sheetClose").innerHTML = T(btn||S.got);
+  document.getElementById("sheet").hidden = false;
+  document.getElementById("sheetClose").focus();
+}
+
+/* ---------- événements ---------- */
+document.addEventListener("click", e=>{
+  const t = e.target.closest("button, mark.j"); if(!t) return;
+  if(t.dataset.go) return go(t.dataset.go);
+  if(t.dataset.lang){ st.lang=t.dataset.lang; save(); return render(); }
+  if(t.id==="backBtn"){ if(st.guide){st.guide=null; return render();} return go("home"); }
+  if(t.id==="voiceBtn"){ st.voice=!st.voice; render(); speak(st.voice?(st.lang==="ty"?"Ua ara te reo.":"Aide vocale activée."):""); if(!st.voice&&"speechSynthesis" in window)speechSynthesis.cancel(); return; }
+  if(t.id==="bigger"){ st.scale=Math.min(1.6,+(st.scale+.1).toFixed(1)); save(); return render(); }
+  if(t.id==="smaller"){ st.scale=Math.max(.9,+(st.scale-.1).toFixed(1)); save(); return render(); }
+  if(t.dataset.ex){ const ex=EX.find(x=>x.id===t.dataset.ex); st.ex=ex.id; st.text=ex.text; return render(); }
+  if(t.id==="go"){ st.text=document.getElementById("src").value; render(); const r=view.querySelector(".readout"); if(r) r.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  if(t.matches("mark.j")){ const d=DICT[+t.dataset.d];
+    sheet(esc(t.textContent), `<div class="def">${T({ty:d.ty,fr:d.fr})}</div>`); speak(st.lang==="ty"?d.ty:d.fr); return; }
+  if(t.id==="sheetClose"){ document.getElementById("sheet").hidden=true; return; }
+  if(t.dataset.guide){ st.guide=t.dataset.guide; st.step=0; render(); const s=GUIDES.find(g=>g.id===st.guide).steps[0]; speak(plainTxt(s.t)+". "+plainTxt(s.x)); return; }
+  if(t.id==="prev"){ if(st.step>0){st.step--; render();} return; }
+  if(t.id==="nextStep"){ const g=GUIDES.find(x=>x.id===st.guide);
+    if(st.step===g.steps.length-1){ st.guide=null; render(); sheet(T(S.bravo), `<div class="stepvis" style="min-height:130px">${TIARE}</div>`, S.close); speak(plainTxt(S.bravo)); return; }
+    st.step++; render(); const s=g.steps[st.step]; speak(plainTxt(s.t)+". "+plainTxt(s.x)); return; }
+  if(t.dataset.say==="step"){ const s=GUIDES.find(g=>g.id===st.guide).steps[st.step]; const was=st.voice; st.voice=true; speak(plainTxt(s.t)+". "+plainTxt(s.x)); st.voice=was; return; }
+  if(t.dataset.say==="plain"){ const ex=EX.find(x=>x.id===st.ex); const was=st.voice; st.voice=true; speak(plainTxt(ex.plain)); st.voice=was; return; }
+  if(t.dataset.call){ const c=CONTACTS[+t.dataset.call];
+    sheet(`${esc(c.n)}`, `<div class="def"><span class="fr" style="display:block">${T(S.callNow)}</span><div class="num" style="font-size:2em;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;user-select:all">${c.num}</div></div><p class="note">${S.callNote.fr}</p>`, S.close); return; }
+});
+document.addEventListener("keydown", e=>{
+  if((e.key==="Enter"||e.key===" ") && e.target.matches("mark.j")){ e.preventDefault(); e.target.click(); }
+  if(e.key==="Escape") document.getElementById("sheet").hidden=true;
+});
+document.getElementById("sheet").addEventListener("click", e=>{ if(e.target.id==="sheet") e.currentTarget.hidden=true; });
+
+/* démarrage : ouvre sur l'accueil */
+render();
+</script>
+
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
+</script>
+</body>
+</html>
