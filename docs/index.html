@@ -162,6 +162,167 @@ header.top::after{content:"";position:absolute;left:0;right:0;bottom:-10px;heigh
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 0L10 10L20 0z'/%3E%3C/svg%3E") repeat-x}
 .bar{padding-top:18px}
 .sheet .stepvis .tiare{width:100px;height:100px}
+
+/* Launcher: clock, app grid, family settings, keypad */
+.clockrow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.time{font-family:var(--display);font-weight:800;font-size:2.6em;line-height:1;font-variant-numeric:tabular-nums}
+.date{flex:1;min-width:0}
+.batt{font-size:.8em;color:var(--muted);font-weight:700}
+.sec{font-family:var(--display);font-size:1.15em;margin:4px 0 8px}
+.appgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.appbtn{background:var(--surface);border:3px solid var(--line);border-radius:20px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;font-weight:700;font-size:.85em;text-align:center}
+.appbtn:active{transform:scale(.97)}
+.appic{width:64px;height:64px;display:grid;place-items:center}
+.appic img{width:64px;height:64px}
+.letter{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;color:#fff;font-family:var(--display);font-size:1.6em;font-weight:800}
+.appname{overflow-wrap:anywhere;line-height:1.15}
+.hint{border:3px dashed var(--line);border-radius:18px;padding:14px;color:var(--muted)}
+.famlink{align-self:center;border:2px solid var(--line);background:transparent;border-radius:14px;padding:10px 16px;font-weight:700;font-size:.8em;color:var(--muted);min-height:48px}
+.pinbox{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.dots{display:flex;gap:14px}
+.dots i{width:20px;height:20px;border-radius:50%;border:3px solid var(--lagoon)}
+.dots i.on{background:var(--lagoon)}
+.pinmsg{color:var(--alert);font-weight:700;margin:0}
+.keypad{display:grid;grid-template-columns:repeat(3,76px);gap:12px;justify-content:center}
+.keypad button{height:76px;border-radius:50%;border:3px solid var(--line);background:var(--bg);font-size:1.5em;font-weight:700;font-variant-numeric:tabular-nums}
+.setlist{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;padding-right:4px}
+.pick{display:flex;align-items:center;gap:12px;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:8px 10px;text-align:left;min-height:60px;width:100%}
+.pick .appic,.pick .appic img{width:44px;height:44px}.pick .letter{width:42px;height:42px;font-size:1.1em;border-radius:12px}
+.pick .nm{flex:1;min-width:0;font-weight:700}
+.pick .box{width:30px;height:30px;border-radius:8px;border:3px solid var(--line);display:grid;place-items:center;flex:none}
+.pick[aria-pressed="true"]{border-color:var(--lagoon);background:var(--lagoon-soft)}
+.pick[aria-pressed="true"] .box{background:var(--lagoon);border-color:var(--lagoon);color:var(--lagoon-ink)}
+.pick .box svg{width:20px;height:20px}
+.status{display:flex;gap:10px;align-items:center;font-weight:700;padding:10px 12px;border-radius:14px}
+.status.ok{background:var(--ok-soft);color:var(--ok)}.status.no{background:var(--alert-soft);color:var(--alert)}
+.status svg{width:26px;height:26px;flex:none}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:2px solid var(--line);border-radius:14px;padding:10px}
+.crow input{width:100%;box-sizing:border-box;border:2px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:.9em;min-width:0}
+.crow input:focus{border-color:var(--lagoon);outline:none}
+.crow .full{grid-column:1/-1}
+.crow .rm{grid-column:1/-1;border:2px solid var(--alert);color:var(--alert);background:transparent;border-radius:10px;min-height:44px;font-weight:700}
+.stack{display:flex;flex-direction:column;gap:10px}
+
+/* header stays readable when the back button shows */
+.brand h1{white-space:nowrap}
+header.top:has(#backBtn:not([hidden])) .brand p{display:none}
+@media (max-width:430px){#voiceBtn span,#backBtn span{display:none}}
+
+/* Read-aloud buttons and larger targets (research: >= 14 mm, about 88 CSS px) */
+.say{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:64px;min-width:72px;padding:8px 16px;border-radius:32px;border:3px solid var(--lagoon);background:var(--lagoon-soft);color:var(--lagoon);font-weight:700;font-size:.9em;flex:none}
+.say svg{width:28px;height:28px}
+.say:active{transform:scale(.96)}
+.withsay{display:flex;gap:10px;align-items:flex-start}
+.withsay>div{flex:1;min-width:0}
+.terms li{display:flex;gap:10px;align-items:center}
+.terms li .t{flex:1;min-width:0}
+nav.bottom button{min-height:88px}
+nav.bottom button svg{width:32px;height:32px}
+.sizes button{min-width:68px;min-height:68px;font-size:1.05em}
+.seg button{min-height:68px}
+.keypad{grid-template-columns:repeat(3,88px)}
+.keypad button{height:88px}
+.crow .rm.confirm{background:var(--alert);color:var(--surface)}
+.warn{flex-wrap:wrap}.warn>div{flex:1;min-width:180px}
+.warn .say{width:100%;align-self:auto}.warn .say svg{color:var(--lagoon);width:28px;height:28px}
+
+/* Voice, internet, radio, music, games */
+.mic{width:100%;display:flex;align-items:center;justify-content:center;gap:14px;min-height:96px;border:0;border-radius:24px;background:var(--lagoon);color:var(--lagoon-ink);font-weight:800;font-size:1.25em;font-family:var(--display)}
+.mic svg{width:40px;height:40px}
+.mic small{display:block;font-family:var(--body);font-weight:400;font-size:.62em;opacity:.9}
+.mic.listening{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.7}}
+.bi{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;color:#fff}
+.bi svg{width:34px;height:34px}
+.tilelist{display:flex;flex-direction:column;gap:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.search{display:flex;gap:8px;flex-wrap:wrap}
+.search input{flex:1;min-width:0;min-height:64px;border:3px solid var(--line);border-radius:16px;padding:0 14px;background:var(--bg);color:var(--ink);font:inherit;font-size:1.05em}
+.search input:focus{border-color:var(--lagoon);outline:none}
+.search .big{width:auto;flex:none;padding:0 22px}
+.player{display:flex;align-items:center;gap:12px;background:var(--ok-soft);border:3px solid var(--ok);border-radius:18px;padding:12px 14px}
+.player .nm{flex:1;min-width:0;font-weight:700}
+.stopbtn{min-width:88px;min-height:72px;border:0;border-radius:16px;background:var(--alert);color:var(--surface);font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 14px}
+.stopbtn svg{width:26px;height:26px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mcard{aspect-ratio:3/4;max-width:100%;border-radius:18px;border:3px solid var(--lagoon);background:var(--lagoon);color:var(--lagoon-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:.85em;min-height:96px}
+.mcard.up{background:var(--surface);color:var(--ink)}
+.mcard.done{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
+.mcard svg{width:46px;height:46px}
+.mcard .back{font-family:var(--display);font-size:2em;opacity:.6}
+.quizword{font-family:var(--display);font-size:2.6em;font-weight:800;text-align:center;margin:6px 0}
+.opt{width:100%;min-height:80px;border:3px solid var(--line);border-radius:18px;background:var(--surface);font-weight:700;font-size:1.1em}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--alert);background:var(--alert-soft)}
+.score{font-weight:700;color:var(--muted);text-align:center}
+.famselect{width:100%;min-height:64px;border:3px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);font:inherit;padding:0 10px}
+
+/* Daily care: greeting, mood, pills, agenda, alarm */
+.day{display:flex;flex-direction:column;gap:10px}
+.moodq{background:var(--surface);border:3px solid var(--sun-line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.moodq h3{margin:0;font-family:var(--display);font-size:1.2em}
+.faces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.face{border:3px solid var(--line);background:var(--bg);border-radius:18px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:.78em;padding:6px 2px;text-align:center}
+.face svg{width:52px;height:52px}
+.face:active{transform:scale(.96)}
+.dose{display:flex;align-items:center;gap:12px;border:3px solid var(--line);border-radius:18px;padding:12px;background:var(--surface)}
+.dose .tm{font-family:var(--display);font-weight:800;font-size:1.5em;font-variant-numeric:tabular-nums;min-width:3.2em}
+.dose .nm{flex:1;min-width:0;font-weight:700}
+.dose .nm small{display:block;font-weight:400;color:var(--muted)}
+.dose.taken{border-color:var(--ok);background:var(--ok-soft)}
+.dose.due{border-color:var(--sun-line);background:var(--surface)}
+.dose.missed{border-color:var(--alert);background:var(--alert-soft)}
+.dose .st{font-weight:700;font-size:.85em}
+.takebtn{min-width:88px;min-height:72px;border:0;border-radius:16px;background:var(--ok);color:var(--surface);font-weight:800;padding:0 12px}
+.remind{position:fixed;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column;justify-content:center;gap:18px;padding-block:24px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));text-align:center}
+.remind .rico{width:110px;height:110px;margin:0 auto;border-radius:50%;background:var(--sun);border:4px solid var(--sun-line);display:grid;place-items:center;color:var(--ink)}
+.remind .rico svg{width:60px;height:60px}
+.remind h2{font-family:var(--display);font-size:1.7em;margin:0}
+.remind .what{font-size:1.5em;font-weight:800}
+.remind .big{min-height:96px;font-size:1.3em}
+.clockset{display:flex;align-items:center;justify-content:center;gap:10px}
+.clockset .col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.clockset .val{font-family:var(--display);font-weight:800;font-size:3.4em;font-variant-numeric:tabular-nums;min-width:1.4em;text-align:center}
+.clockset button{width:88px;height:72px;border-radius:16px;border:3px solid var(--line);background:var(--surface);font-size:1.6em;font-weight:800}
+.appt{display:flex;gap:12px;align-items:center;border:3px solid var(--line);border-radius:18px;padding:12px;background:var(--surface)}
+.appt .when{font-weight:800;min-width:6.5em;font-variant-numeric:tabular-nums}
+.appt.today{border-color:var(--lagoon)}
+.hist{display:flex;flex-direction:column;gap:6px}
+.hist .r{display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+.hist .r svg{width:30px;height:30px;flex:none}
+.hist .r .d{min-width:7.5em;font-weight:700}
+.rec{display:flex;gap:8px;flex-wrap:wrap}
+.rec button{flex:1;min-width:120px}
+.rec .recording{background:var(--alert);color:var(--surface);border-color:var(--alert)}
+.appname{overflow-wrap:break-word;hyphens:auto}
+
+/* Virtual pill box: one compartment per moment of the day */
+:root{--c-matin:#fff1c2;--c-midi:#ffe0c7;--c-soir:#eadcff;--c-nuit:#d8e6ff;--c-matin-b:#d9a400;--c-midi-b:#d9782b;--c-soir-b:#8a5ad1;--c-nuit-b:#3f6fc4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-matin:#3b3214;--c-midi:#3d2a1a;--c-soir:#2e2442;--c-nuit:#1c2b45;--c-matin-b:#e6bf3a;--c-midi-b:#e8965a;--c-soir-b:#b48ef0;--c-nuit-b:#7ea6ec}}
+:root[data-theme="dark"]{--c-matin:#3b3214;--c-midi:#3d2a1a;--c-soir:#2e2442;--c-nuit:#1c2b45;--c-matin-b:#e6bf3a;--c-midi-b:#e8965a;--c-soir-b:#b48ef0;--c-nuit-b:#7ea6ec}
+.pillbox{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px;border-radius:26px;background:var(--line)}
+.comp{border-radius:20px;border:4px solid var(--cb);background:var(--cbg);padding:12px;display:flex;flex-direction:column;gap:8px;min-height:190px;min-width:0}
+.comp .lid{display:flex;align-items:center;gap:8px}
+.comp .lid svg{width:34px;height:34px;color:var(--cb);flex:none}
+.comp .lid b{font-family:var(--display);font-size:1.1em;line-height:1.1;display:block}
+.comp .lid .ct{font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted);font-size:.85em}
+.comp ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;flex:1}
+.comp li{background:var(--surface);border-radius:12px;padding:8px 10px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.comp li .q{display:block;font-weight:400;color:var(--muted);font-size:.85em}
+.comp .empty{color:var(--muted);font-style:italic;flex:1}
+.comp .badge{align-self:flex-start;font-weight:800;font-size:.8em;border-radius:20px;padding:4px 10px;background:var(--surface)}
+.comp.taken .badge{background:var(--ok);color:var(--surface)}
+.comp.missed .badge{background:var(--alert);color:var(--surface)}
+.comp.due{box-shadow:0 0 0 4px var(--sun)}
+.comp .takebtn{width:100%}
+.comp.edit input{width:100%;box-sizing:border-box;border:2px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:.9em;min-width:0}
+.comp.edit .it{display:grid;grid-template-columns:1fr auto;gap:6px;background:var(--surface);border-radius:12px;padding:6px}
+.comp.edit .it input{border-color:var(--line)}
+.comp.edit .x{min-width:56px;min-height:56px;border:2px solid var(--alert);border-radius:10px;background:transparent;color:var(--alert);font-weight:800;grid-row:span 2}
+.comp.edit .addit{min-height:56px;border:2px dashed var(--cb);border-radius:12px;background:transparent;font-weight:700}
+@media (max-width:360px){.pillbox{grid-template-columns:1fr}}
+.pillbox.editing{grid-template-columns:1fr}
+.comp.edit input{font-size:1em;min-height:52px}
 </style>
 </head>
 <body>
@@ -193,6 +354,8 @@ header.top::after{content:"";position:absolute;left:0;right:0;bottom:-10px;heigh
   <nav class="bottom" id="nav"></nav>
 </div>
 
+<div class="remind" id="remind" role="alertdialog" aria-live="assertive" hidden></div>
+
 <div class="sheet" id="sheet" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <h3 id="sheetTitle"></h3>
@@ -221,8 +384,30 @@ const P = {
   hang:'<path d="M3 14c5-5 13-5 18 0l-2.5 2.5-3-1.5v-2.5a10 10 0 0 0-7 0V15l-3 1.5z"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
-  check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'
+  check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  radio:'<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8l10-5"/><circle cx="8.5" cy="14" r="2.5"/><path d="M14 12h4M14 16h4"/>',
+  music:'<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+  game:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.4"/><circle cx="16" cy="8" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="8" cy="16" r="1.4"/><circle cx="16" cy="16" r="1.4"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  play:'<path d="M7 4l13 8-13 8z"/>',
+  stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/>',
+  fish:'<path d="M3 12c3-5 10-6 14-1l4-3v8l-4-3c-4 5-11 4-14-1z"/><circle cx="8" cy="11" r="1"/>',
+  turtle:'<ellipse cx="12" cy="12" rx="6" ry="5"/><path d="M12 7v10M7 10L4 8M17 10l3-2M7 15l-3 2M17 15l3 2M12 7V4"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  wave:'<path d="M2 15c3-4 5-4 8 0s5 4 8 0 3-3 4-2"/><path d="M2 10c3-4 5-4 8 0s5 4 8 0"/>',
+  pill:'<path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7z"/><path d="M7 7l7 7"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3"/>',
+  alarm:'<circle cx="12" cy="13" r="7"/><path d="M12 10v3l2 2M5 4L2.5 6.5M19 4l2.5 2.5"/>',
+  sunrise:'<path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0M12 5v5M5.2 10.2l1.6 1.6M18.8 10.2l-1.6 1.6M9 7.5l3-3 3 3"/>',
+  sunset:'<path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0M12 4v6M9 7l3 3 3-3M5.2 10.2l1.6 1.6M18.8 10.2l-1.6 1.6"/>',
+  heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>'
 };
+const FACE = v => { const mouth={4:'M8 14c1.5 2.5 6.5 2.5 8 0',3:'M8.5 14.5c1.5 1 5.5 1 7 0',2:'M8.5 15h7',1:'M8 16.5c1.5-2.5 6.5-2.5 8 0'}[v];
+  const col={4:"var(--ok)",3:"var(--lagoon)",2:"var(--sun-line)",1:"var(--alert)"}[v];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="9" cy="10" r="1" fill="${col}"/><circle cx="15" cy="10" r="1" fill="${col}"/><path d="${mouth}"/></svg>`; };
 const TIARE = '<svg class="tiare" viewBox="-30 -30 60 60" aria-hidden="true"><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(12)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(84)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(156)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(228)" class="petal"/><ellipse cx="0" cy="-13" rx="7" ry="14" transform="rotate(300)" class="petal"/><circle r="5" class="heart"/></svg>';
 const SCENE = '<svg class="scene" viewBox="0 0 360 150" role="img" aria-label="Montagnes de Tahiti, lagon, cocotier et pirogue"><rect width="360" height="150" class="sky"/><circle cx="292" cy="40" r="20" class="sunf"/><path class="mount2" d="M0 112 L38 72 L66 86 L108 38 L132 58 L160 26 L192 72 L232 60 L272 96 L360 102 V150 H0Z"/><path class="mount" d="M0 122 L48 96 L84 106 L120 76 L150 99 L200 90 L250 110 L300 106 L360 118 V150 H0Z"/><path class="sea" d="M0 118 Q90 112 180 118 T360 118 V150 H0Z"/><path class="wave" d="M20 134 q10 -5 20 0 t20 0 M70 144 q10 -5 20 0 t20 0 M200 140 q10 -5 20 0 t20 0"/><ellipse cx="318" cy="128" rx="36" ry="6" class="sand"/><path class="trunk" d="M318 127 Q323 100 312 78"/><path class="frond" d="M312 78 q-18 -14 -38 -4 q20 -2 38 4z M312 78 q-20 2 -32 20 q14 -12 32 -20z M312 78 q14 -18 34 -14 q-18 2 -34 14z M312 78 q22 -2 32 16 q-14 -10 -32 -16z M312 78 q-2 -20 10 -30 q-6 14 -10 30z"/><path class="hull" d="M118 124 q32 6 66 0 l-5 6 q-28 4 -56 0z"/><path class="rig" d="M132 124 l5 -9 M168 124 l5 -9 M135 115 h41 M152 113 v10 M144 110 l16 20"/><circle cx="152" cy="109" r="3.2" class="hull"/></svg>';
 const ic = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
@@ -262,6 +447,95 @@ const S = {
   samu:{ty:"Taote",fr:"SAMU"}, police:{ty:"Muto'i",fr:"Police / Gendarmerie"}, fire:{ty:"Tinai auahi",fr:"Pompiers"},
   family:{ty:"To 'oe mau fēti'i",fr:"Votre famille"},
   example:{ty:"hi'ora'a",fr:"exemple"},
+  myApps:{ty:"Ta'u mau porotarama",fr:"Mes applications"},
+  noApps:{ty:"E nehenehe te fēti'i e tāpiri i te mau porotarama i 'ō nei.",fr:"La famille peut ajouter ici des applications, dans « Réglages famille »."},
+  famT:{ty:"No te fēti'i",fr:"Réglages famille"},
+  pinCreate:{ty:"Mā'iti i te hō'ē nūmera huna (4 nūmera)",fr:"Choisissez un code secret (4 chiffres)"},
+  pinConfirm:{ty:"Pāpa'i fa'ahou i te nūmera huna",fr:"Tapez le code encore une fois"},
+  pinCheck:{ty:"Pāpa'i i te nūmera huna",fr:"Tapez le code secret"},
+  pinWrong:{ty:"E hape te nūmera huna.",fr:"Code incorrect."},
+  pinDiff:{ty:"'Aita i au. Ha'amata fa'ahou.",fr:"Les deux codes sont différents. Recommencez."},
+  homeT:{ty:"Te 'api mātāmua",fr:"Écran d'accueil"},
+  isHome:{ty:"Ua riro Marama Iti ei 'api mātāmua.",fr:"Marama Iti est l'écran d'accueil du téléphone."},
+  notHome:{ty:"E 'ere ā Marama Iti i te 'api mātāmua.",fr:"Marama Iti n'est pas encore l'écran d'accueil."},
+  makeHome:{ty:"Fa'ariro ei 'api mātāmua",fr:"Faire de Marama Iti l'écran d'accueil"},
+  makeHomeHelp:{ty:"",fr:"Android ouvre ses réglages : choisissez « Marama Iti » comme application d'accueil."},
+  androidOnly:{ty:"I roto noa i te porotarama Android.",fr:"Disponible seulement dans l'application Android installée."},
+  pickApps:{ty:"Mā'iti i te mau porotarama",fr:"Applications affichées à l'accueil"},
+  pickHelp:{ty:"",fr:"Touchez une application pour l'ajouter ou la retirer. Elles apparaissent dans cet ordre."},
+  contactsT:{ty:"Te mau fēti'i",fr:"Contacts à appeler"},
+  cName:{ty:"",fr:"Nom"}, cRel:{ty:"",fr:"Lien (fille, voisin…)"}, cNum:{ty:"",fr:"Numéro"},
+  add:{ty:"Tāpiri",fr:"Ajouter un contact"}, remove:{ty:"Fa'a'ore",fr:"Retirer"},
+  changePin:{ty:"Taui i te nūmera huna",fr:"Changer le code secret"},
+  androidSettings:{ty:"",fr:"Ouvrir les réglages Android"},
+  openApp:{ty:"",fr:"Dans l'application Android, ce bouton ouvre"},
+  battery:{ty:"Pūai",fr:"Batterie"},
+  exampleNote:{ty:"",fr:"Numéros d'exemple : remplacez-les dans « Réglages famille »."},
+  loading:{ty:"Te tai'o nei…",fr:"Chargement…"},
+  speakT:{ty:"Paraparau",fr:"Parler"},
+  speakHint:{ty:"",fr:"Ex. : « Appelle Marie », « Ouvre WhatsApp », « Mets la radio »"},
+  heard:{ty:"Ua fa'aro'o vau :",fr:"J'ai entendu :"},
+  notUnderstood:{ty:"'Aita i ta'a ia'u.",fr:"Je n'ai pas compris. Essayez : « Appelle Marie » ou « Mets la radio »."},
+  typeCmd:{ty:"",fr:"Écrivez votre demande, comme vous la diriez :"},
+  send:{ty:"Hāpono",fr:"Envoyer"},
+  yesCall:{ty:"'Ē, pi'i",fr:"Oui, appeler"}, no:{ty:"'Aita",fr:"Non"},
+  webT:{ty:"Itenati",fr:"Internet"}, radioT:{ty:"Rātio",fr:"Radio"}, musicT:{ty:"Pehe",fr:"Musique"}, gamesT:{ty:"Ha'uti",fr:"Jeux"},
+  searchPh:{ty:"E aha tā 'oe e 'imi ?",fr:"Que cherchez-vous ?"}, searchBtn:{ty:"'Imi",fr:"Chercher"},
+  sitesT:{ty:"Ta'u mau vāhi itenati",fr:"Mes sites"},
+  webNote:{ty:"",fr:"Pour revenir ici, touchez la croix ✕ en haut de la page internet."},
+  stationsT:{ty:"Te mau rātio",fr:"Stations"},
+  radioNote:{ty:"",fr:"La station s'ouvre sur sa page d'écoute en direct. Touchez « Écouter » sur la page."},
+  playing:{ty:"Te fa'aro'o nei",fr:"En écoute"}, stopT:{ty:"Fa'aea",fr:"Arrêter"},
+  myMusic:{ty:"Ta'u pehe",fr:"Ouvrir ma musique"},
+  noMusicApp:{ty:"",fr:"La famille peut choisir l'application de musique dans « Réglages famille »."},
+  himene:{ty:"Hīmene",fr:"Chants et hīmene"}, tahMusic:{ty:"Pehe tahiti",fr:"Musique tahitienne"}, oldSongs:{ty:"Pehe tahito",fr:"Chansons d'autrefois"},
+  memT:{ty:"Ha'amana'o",fr:"Mémoire"}, memD:{ty:"'Imi i te mau piti",fr:"Retrouvez les paires"},
+  quizT:{ty:"Ta'o tahiti",fr:"Les mots tahitiens"}, quizD:{ty:"",fr:"Devinez le sens du mot"},
+  moves:{ty:"",fr:"coups"},
+  memWin:{ty:"Maita'i roa ! Ua 'itehia te mau piti ato'a.",fr:"Bravo ! Toutes les paires sont trouvées."},
+  again:{ty:"Ha'uti fa'ahou",fr:"Rejouer"},
+  quizQ:{ty:"E aha te aura'a o teie ta'o ?",fr:"Que veut dire ce mot ?"},
+  good:{ty:"Tano !",fr:"Bravo, c'est juste !"}, wasT:{ty:"",fr:"C'était"},
+  sitesSet:{ty:"",fr:"Sites internet affichés"}, radiosSet:{ty:"",fr:"Stations de radio"},
+  radiosHelp:{ty:"",fr:"Adresse de la page de la station, ou adresse directe du flux audio (.mp3, .aac) pour écouter dans l'application."},
+  musicSet:{ty:"",fr:"Application de musique"}, none:{ty:"",fr:"Aucune"},
+  siteName:{ty:"",fr:"Nom"}, siteUrl:{ty:"",fr:"Adresse (https://…)"},
+  addSite:{ty:"",fr:"Ajouter un site"}, addRadio:{ty:"",fr:"Ajouter une station"},
+  openLink:{ty:"",fr:"Ouvrir la page"},
+  myGames:{ty:"Ta'u mau ha'uti",fr:"Mes jeux"}, webGames:{ty:"",fr:"Jeux sur internet"},
+  gamesSet:{ty:"",fr:"Jeux affichés"}, gamesHelp:{ty:"",fr:"Installez les jeux depuis le Play Store, puis cochez-les ici. Préférez les jeux sans chrono, sans achats et sans publicités."},
+  gameLinksSet:{ty:"",fr:"Jeux sur internet"}, gameLinksHelp:{ty:"",fr:"Nom et adresse d'un jeu en ligne. Il s'ouvre dans le navigateur simplifié."},
+  addGame:{ty:"",fr:"Ajouter un jeu en ligne"},
+  dayT:{ty:"Ta'u mahana",fr:"Ma journée"}, leisureT:{ty:"Ha'uti e fa'aro'o",fr:"Loisirs"},
+  pillsT:{ty:"Ta'u mau rā'au",fr:"Mes médicaments"}, agendaT:{ty:"Ta'u mau fārereira'a",fr:"Mon agenda"}, alarmT:{ty:"Fa'aara",fr:"Réveil"},
+  pillTime:{ty:"Ua tae i te hora no to 'oe rā'au :",fr:"C'est l'heure de vos médicaments :"},
+  took:{ty:"Ua inu vau",fr:"J'ai pris"}, later:{ty:"A muri iho",fr:"Plus tard (5 min)"},
+  taken:{ty:"Ua inu",fr:"Pris"}, dueT:{ty:"I teie nei",fr:"À prendre"}, missed:{ty:"'Aita",fr:"Oublié"}, upcoming:{ty:"",fr:"Plus tard"},
+  noPills:{ty:"",fr:"Aucun médicament programmé. La famille peut les ajouter dans « Réglages famille »."},
+  apptSoon:{ty:"Fārereira'a i teie hora i mua :",fr:"Rendez-vous dans une heure :"}, okT:{ty:"Ua ta'a",fr:"D'accord"},
+  noAppts:{ty:"",fr:"Aucun rendez-vous à venir."}, todayT:{ty:"I teie mahana",fr:"Aujourd'hui"},
+  alarmSet:{ty:"Fa'anaho i te fa'aara",fr:"Régler le réveil"}, alarmList:{ty:"",fr:"Voir mes réveils"},
+  alarmHelp:{ty:"",fr:"Le réveil sonne avec l'horloge du téléphone, même écran éteint."},
+  moodQ:{ty:"E aha to 'oe huru i teie po'ipo'i ?",fr:"Comment vous sentez-vous ce matin ?"},
+  m4:{ty:"Maita'i roa",fr:"Très bien"}, m3:{ty:"Maita'i",fr:"Bien"}, m2:{ty:"'Aita maita'i roa",fr:"Pas très bien"}, m1:{ty:"Ma'i",fr:"Mal"},
+  thanks:{ty:"Māuruuru !",fr:"Merci !"},
+  warnFam:{ty:"E hina'aro 'oe e fa'aara i te hō'ē fēti'i ?",fr:"Voulez-vous prévenir un proche ?"},
+  sendMsg:{ty:"",fr:"Envoyer un message à"},
+  followT:{ty:"Te huru",fr:"Suivi : moral et médicaments"},
+  followHelp:{ty:"",fr:"Les 14 derniers jours. Ces informations restent sur ce téléphone."},
+  profileT:{ty:"",fr:"Accueil personnalisé"}, pName:{ty:"",fr:"Prénom ou surnom (ex. Mama Teura)"}, pMsg:{ty:"",fr:"Message de bienvenue (ex. Bonne journée, on t'aime !)"},
+  recT:{ty:"",fr:"Enregistrer un message vocal (10 s)"}, recStop:{ty:"",fr:"Arrêter"}, recPlay:{ty:"",fr:"Écouter"}, recDel:{ty:"",fr:"Supprimer"},
+  recHelp:{ty:"",fr:"Le message vocal est joué à la première ouverture de la journée. C'est aussi la meilleure façon d'avoir le reo tahiti avec une vraie voix."},
+  recFail:{ty:"",fr:"Le micro n'est pas disponible ici."},
+  pillsSet:{ty:"",fr:"Pilulier"}, pillsHelp:{ty:"",fr:"Nom, consigne (ex. 1 comprimé avec le repas, selon l'ordonnance) et heures séparées par des virgules (ex. 08:00, 20:00). L'annonce se répète toutes les 5 minutes jusqu'à « J'ai pris »."},
+  pillN:{ty:"",fr:"Médicament"}, pillNote:{ty:"",fr:"Consigne"}, pillTimes:{ty:"",fr:"Heures (08:00, 20:00)"}, addPill:{ty:"",fr:"Ajouter un médicament"},
+  agendaSet:{ty:"",fr:"Rendez-vous"}, apDate:{ty:"",fr:"Date"}, apTime:{ty:"",fr:"Heure"}, apLabel:{ty:"",fr:"Rendez-vous (ex. Dentiste)"}, addAppt:{ty:"",fr:"Ajouter un rendez-vous"},
+  medNote:{ty:"",fr:"Marama Iti rappelle les prises : elle ne remplace pas l'avis du médecin ou du pharmacien."},
+  cMatin:{ty:"Po'ipo'i",fr:"Matin"}, cMidi:{ty:"Avatea",fr:"Midi"}, cSoir:{ty:"Ahiahi",fr:"Soir"}, cNuit:{ty:"Pō",fr:"Coucher"},
+  emptyC:{ty:"'Aita e rā'au",fr:"Vide"}, editBox:{ty:"",fr:"Modifier le pilulier"}, doneEdit:{ty:"Ua oti",fr:"Terminé"},
+  addMed:{ty:"",fr:"+ Ajouter"}, medName:{ty:"",fr:"Médicament"}, medQty:{ty:"",fr:"Combien (ex. 1 comprimé)"},
+  boxHelp:{ty:"",fr:"Écrivez dans chaque case les médicaments et le nombre à prendre, comme sur l'ordonnance. Changez l'heure si besoin."},
+  takeEarly:{ty:"",fr:"Vous pouvez valider jusqu'à une heure avant."},
   voiceNote:{ty:"",fr:"La voix lit le reo tahiti avec une voix française : la prononciation reste approximative."}
 };
 
@@ -327,14 +601,80 @@ const GUIDES = [
   ]}
 ];
 
-const CONTACTS = [
+/* mémoire du téléphone (réglages famille) */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem("marama-"+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem("marama-"+k, JSON.stringify(v)); }catch(e){} }
+};
+const DEFAULT_CONTACTS = [
   {n:"Marie", r:{ty:"Tamahine",fr:"Fille"}, num:"87 12 34 56"},
   {n:"Teva", r:{ty:"Tamaiti",fr:"Fils"}, num:"89 65 43 21"},
   {n:"Dr Tetuanui", r:{ty:"Taote",fr:"Médecin"}, num:"40 50 60 70"}
 ];
+let CONTACTS = store.get("contacts", null) || DEFAULT_CONTACTS.map(c=>({...c}));
+let CONTACTS_EXAMPLE = !store.get("contacts", null);
+const relText = r => typeof r==="string" ? esc(r) : T(r);
+
+const DEFAULT_SITES = [
+  {n:"Météo", url:"https://www.meteo.pf/"},
+  {n:"TNTV", url:"https://www.tntv.pf/"},
+  {n:"Polynésie la 1ère", url:"https://la1ere.francetvinfo.fr/polynesie/"},
+  {n:"Wikipédia", url:"https://fr.wikipedia.org/"},
+  {n:"CPS", url:"https://www.cps.pf/"},
+  {n:"Service public", url:"https://www.service-public.pf/"}
+];
+const DEFAULT_RADIOS = [
+  {n:"Radio 1", url:"https://www.radio1.pf/"},
+  {n:"Tiare FM", url:"https://www.tiarefm.pf/"},
+  {n:"Polynésie la 1ère", url:"https://la1ere.francetvinfo.fr/polynesie/"},
+  {n:"Radio Maria No Te Hau", url:"https://radiomarianotehau.com/"}
+];
+let GAMELINKS = store.get("gamelinks", []);
+let SITES = store.get("sites", null) || DEFAULT_SITES.map(s=>({...s}));
+let RADIOS = store.get("radios", null) || DEFAULT_RADIOS.map(s=>({...s}));
+let PROFILE = store.get("profile", {name:"", msg:""});
+const COMPS = [{id:"matin",t:"08:00",ic:"sunrise",s:"cMatin"},{id:"midi",t:"12:00",ic:"sun",s:"cMidi"},{id:"soir",t:"19:00",ic:"sunset",s:"cSoir"},{id:"nuit",t:"21:30",ic:"moon",s:"cNuit"}];
+let BOX = store.get("pillbox", null);
+let PILLS = store.get("pills", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : [{n:"Tension", note:"1 comprimé avec le petit-déjeuner (exemple)", times:"08:00, 20:00"}]);
+if(!BOX){
+  BOX = COMPS.map(c=>({id:c.id, t:c.t, items:[]}));
+  const old = store.get("pills", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : null);
+  if(old===null){ BOX[0].items=[{n:"Tension (exemple)", q:"1 comprimé"}]; BOX[2].items=[{n:"Tension (exemple)", q:"1 comprimé"},{n:"Vitamine D (exemple)", q:"10 gouttes"}]; }
+  else old.forEach(p=>{ if(!p.n) return; (p.times||"").split(/[,;]+/).forEach(s=>{ const m=/(\d{1,2})[:hH.](\d{2})/.exec(s); if(!m) return;
+    const hr=+m[1], c = hr<11?0 : hr<15?1 : hr<20?2 : 3; BOX[c].items.push({n:p.n, q:p.note||""}); }); });
+}
+let AGENDA = store.get("agenda", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : [{date:new Date(Date.now()+86400000*2).toISOString().slice(0,10), time:"09:30", label:"Taote, Dr Tetuanui (exemple)"}]);
+let LOG = store.get("log", {});      // { "AAAA-MM-JJ": { "pill:0:08:00": "08:04", "appt:...": "ok" } }
+let MOODS = store.get("moods", {});  // { "AAAA-MM-JJ": {v:1..4, t:"08:12"} }
+const WORDS = [
+  ["fare","maison"],["moana","océan"],["i'a","poisson"],["pape","eau"],["mā'a","nourriture"],["va'a","pirogue"],
+  ["mahana","soleil, jour"],["ua","pluie"],["fētū","étoile"],["marama","lune, lumière"],["honu","tortue"],["'ūrī","chien"]
+];
+const MEM = [["tiare","tiare"],["sun","mahana"],["fish","i'a"],["turtle","honu"],["star","fētū"],["moon","marama"]];
+
+/* ---------- pont vers Android (module Launcher) ---------- */
+const CAP = window.Capacitor;
+const NATIVE = !!(CAP && CAP.nativePromise && CAP.getPlatform && CAP.getPlatform()==="android");
+const L = (method, opts) => CAP.nativePromise("Launcher", method, opts||{});
+const DEMO_APPS = [
+  {name:"Appareil photo", package:"demo.camera", color:"#3567c9"},
+  {name:"Galerie", package:"demo.gallery", color:"#c9512f"},
+  {name:"WhatsApp", package:"demo.whatsapp", color:"#1f9a52"},
+  {name:"Messages", package:"demo.sms", color:"#2582b8"},
+  {name:"Facebook", package:"demo.facebook", color:"#3b5998"},
+  {name:"Météo", package:"demo.meteo", color:"#b88600"},
+  {name:"YouTube", package:"demo.youtube", color:"#c62828"},
+  {name:"Radio", package:"demo.radio", color:"#7445ad"},
+  {name:"Solitaire", package:"demo.solitaire", color:"#2e7d32"},
+  {name:"Mots croisés", package:"demo.crosswords", color:"#5d4037"},
+  {name:"Sudoku", package:"demo.sudoku", color:"#1565c0"}
+];
 
 /* ---------- état ---------- */
-const st = {lang:"both", view:"home", ex:null, text:"", guide:null, step:0, voice:false, scale:1};
+const st = {lang:"both", view:"home", ex:null, text:"", guide:null, step:0, voice:false, scale:1,
+  apps: NATIVE ? null : DEMO_APPS, favs: store.get("favs", NATIVE ? [] : ["demo.camera","demo.whatsapp","demo.sms","demo.gallery","demo.meteo","demo.radio"]),
+  games: store.get("games", NATIVE ? [] : ["demo.solitaire","demo.crosswords","demo.sudoku"]),
+  isDefault:null, battery:null, musicApp: store.get("musicApp",""), playing:null, mem:null, quiz:null, confirmRm:null, pin: store.get("pin", null), pinMode:"check", pinEntry:"", pinFirst:"", pinMsg:null};
 try{const s=JSON.parse(localStorage.getItem("marama-iti")||"{}"); if(s.lang)st.lang=s.lang; if(s.scale)st.scale=s.scale;}catch(e){}
 const save=()=>{try{localStorage.setItem("marama-iti",JSON.stringify({lang:st.lang,scale:st.scale}))}catch(e){}};
 
@@ -348,10 +688,12 @@ const plainTxt = o => st.lang==="ty" ? (o.ty||o.fr) : o.fr;   // text spoken alo
 
 /* ---------- voix ---------- */
 function speak(text){
-  if(!st.voice || !("speechSynthesis" in window) || !text) return;
+  if(!st.voice || !text) return;
+  if(NATIVE){ L("speak",{text, rate:.95}).catch(()=>{}); return; }
+  if(!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "fr-FR"; u.rate = .85;
+  u.lang = "fr-FR"; u.rate = .95;
   speechSynthesis.speak(u);
 }
 
@@ -388,19 +730,68 @@ function analyse(raw){
   return {html,used,scam};
 }
 
+/* ---------- horloge ---------- */
+const DAYS={fr:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],ty:["Tāpati","Monirē","Mahana piti","Mahana toru","Mahana maha","Mahana pae","Mahana mā'a"]};
+const MONTHS={fr:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],ty:["Tenuare","Fepuare","Māti","'Eperera","Mē","Tiunu","Tiurai","'Ātete","Tetepa","'Ātopa","Novema","Tītema"]};
+function clockHTML(){
+  const d=new Date(), hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  const fr=`${DAYS.fr[d.getDay()]} ${d.getDate()} ${MONTHS.fr[d.getMonth()]}`;
+  const ty=`${DAYS.ty[d.getDay()]} ${d.getDate()} no ${MONTHS.ty[d.getMonth()]}`;
+  return `<div class="time">${hm}</div><div class="date">${T({ty,fr})}${st.battery!=null?`<div class="batt">${plainTxt(S.battery)} ${st.battery} %</div>`:""}</div>`;
+}
+const sayBtn = txt => `<button class="say" data-speak="${esc(txt)}">${ic("speaker")}<span>${plainTxt(S.listen)}</span></button>`;
+function sayNow(text){
+  if(!text) return;
+  if(NATIVE){ L("speak",{text, rate:.95}).catch(()=>{}); return; }
+  if(!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text); u.lang="fr-FR"; u.rate=.95; speechSynthesis.speak(u);
+}
+function timeSentence(){
+  const d=new Date(), h=d.getHours(), m=d.getMinutes();
+  if(st.lang==="ty") return `Ia ora na. ${DAYS.ty[d.getDay()]} ${d.getDate()} no ${MONTHS.ty[d.getMonth()]}. Hora ${h}, ${m} miniti.`;
+  return `Bonjour. Nous sommes ${DAYS.fr[d.getDay()]} ${d.getDate()} ${MONTHS.fr[d.getMonth()]}. Il est ${h} heures ${m}.`+(st.battery!=null?` Batterie ${st.battery} pour cent.`:"");
+}
+const findApp = p => (st.apps||[]).find(a=>a.package===p);
+const appIcon = a => a.icon ? `<img src="${a.icon}" alt="">` : `<span class="letter" style="background:${a.color||"#0b7a80"}">${esc(a.name.charAt(0))}</span>`;
+const contactRow = (c,i) => `<div class="contact"><div class="who"><strong>${esc(c.n)}</strong> · ${relText(c.r)}<div class="num">${esc(c.num)}</div></div><a class="call" href="tel:${esc(c.num.replace(/\s/g,""))}" aria-label="Appeler ${esc(c.n)}">${ic("phone")}</a></div>`;
+
 /* ---------- vues ---------- */
 const V = {
   home(){
     return `
     <section class="hero">
       ${SCENE}
-      <div class="hello"><h2>${T(S.greet)}</h2><p>${T(S.sub)}</p></div>
+      <div class="hello">
+        <div class="clockrow" id="clock">${clockHTML()}</div>
+        <div class="withsay" style="margin-top:8px"><div><h2>${T(greetObj())}</h2>${PROFILE.msg?`<p style="font-weight:700">${esc(PROFILE.msg)}</p>`:""}<p>${T(S.sub)}</p></div><button class="say" data-speak="@time" aria-label="Écouter l'heure">${ic("speaker")}</button></div>
+      </div>
+    </section>
+    ${moodCard()}
+    <button class="mic" data-listen="1">${ic("mic")}<span>${plainTxt(S.speakT)}<small>${S.speakHint.fr}</small></span></button>
+    ${st.playing?playerHTML():""}
+    <section class="day">
+      <h3 class="sec">${T(S.dayT)}</h3>
+      ${todayHTML()}
+      <div class="appgrid">${tileBtns([["pills","pill","#0b7a80",S.pillsT],["agenda","cal","#1d6fa8",S.agendaT],["alarm","alarm","#b5462b",S.alarmT]])}</div>
+    </section>
+    <section>
+      <h3 class="sec">${T(S.leisureT)}</h3>
+      <div class="appgrid">${tileBtns([["web","globe","#1d6fa8",S.webT],["radio","radio","#b5462b",S.radioT],["music","music","#7445ad",S.musicT],["games","game","#1f8a4d",S.gamesT]])}</div>
+    </section>
+    <section>
+      <h3 class="sec">${T(S.myApps)}</h3>
+      ${(()=>{ const favs=st.favs.map(findApp).filter(Boolean);
+        const builtins="";
+        const apps = st.apps===null ? "" : favs.map(a=>`<button class="appbtn" data-app="${esc(a.package)}"><span class="appic">${appIcon(a)}</span><span class="appname">${esc(a.name)}</span></button>`).join("");
+        return `<div class="appgrid">${builtins}${apps}</div>${st.apps!==null&&!favs.length?`<p class="hint">${T(S.noApps)}</p>`:""}`; })()}
     </section>
     <button class="tile hot" data-go="text"><span class="ic">${ic("doc")}</span><span class="txt"><strong>${T(S.simpT)}</strong><small>${T(S.simpD)}</small></span></button>
     <button class="tile" data-go="guides"><span class="ic">${ic("compass")}</span><span class="txt"><strong>${T(S.guideT)}</strong><small>${T(S.guideD)}</small></span></button>
     <button class="tile" data-go="calls"><span class="ic">${ic("phone")}</span><span class="txt"><strong>${T(S.callT)}</strong><small>${T(S.callD)}</small></span></button>
     <button class="tile sos" data-go="sos"><span class="ic">${ic("help")}</span><span class="txt"><strong>${T(S.sosT)}</strong><small>${T(S.sosD)}</small></span></button>
-    <p class="note">${T(S.voiceNote)}</p>`;
+    <p class="note">${T(S.voiceNote)}</p>
+    <button class="famlink" data-family="1">⚙ ${plainTxt(S.famT)}</button>`;
   },
   text(){
     const ex = EX.find(e=>e.id===st.ex);
@@ -417,11 +808,11 @@ const V = {
     </div>`;
     if(st.text.trim()){
       const a = analyse(st.text);
-      if(a.scam) out += `<div class="warn" role="alert">${ic("alert")}<div>${T(S.scam)}</div></div>`;
-      out += `<div class="card"><p class="note">${T(S.tapHint)}</p><div class="readout">${a.html}</div></div>`;
+      if(a.scam) out += `<div class="warn" role="alert">${ic("alert")}<div>${T(S.scam)}</div>${sayBtn(plainTxt(S.scam))}</div>`;
+      out += `<div class="card"><p class="note">${T(S.tapHint)}</p><div class="readout">${a.html}</div><div style="height:10px"></div>${sayBtn(st.text)}</div>`;
       if(ex && ex.text===st.text) out += `<div class="plain"><h3>${T(S.plain)}</h3><div class="readout">${T(ex.plain)}</div>
         <div style="height:10px"></div><button class="ghost" data-say="plain">${T(S.listen)}</button></div>`;
-      out += `<div class="card"><h3>${T(S.found)}</h3>${a.used.length?`<ul class="terms">${a.used.map(i=>`<li><b>${esc(DICT[i].k)}</b>${T({ty:DICT[i].ty,fr:DICT[i].fr})}</li>`).join("")}</ul>`:`<p>${T(S.none)}</p>`}</div>`;
+      out += `<div class="card"><h3>${T(S.found)}</h3>${a.used.length?`<ul class="terms">${a.used.map(i=>`<li><div class="t"><b>${esc(DICT[i].k)}</b>${T({ty:DICT[i].ty,fr:DICT[i].fr})}</div>${sayBtn(DICT[i].k+". "+(st.lang==="ty"?DICT[i].ty:DICT[i].fr))}</li>`).join("")}</ul>`:`<p>${T(S.none)}</p>`}</div>`;
     }
     return out;
   },
@@ -449,8 +840,8 @@ const V = {
   },
   calls(){
     return `<h2 style="font-family:var(--display);margin:0">${T(S.callT)}</h2>` +
-      CONTACTS.map((c,i)=>`<div class="contact"><div class="who"><strong>${esc(c.n)}</strong> · ${T(c.r)}<div class="num">${c.num}</div></div><a class="call" href="tel:${c.num.replace(/\s/g,"")}" aria-label="Appeler ${esc(c.n)}">${ic("phone")}</a></div>`).join("") +
-      `<p class="note">${T({ty:"",fr:"Numéros d'exemple : la famille pourra les remplacer par les vrais."})}</p>`;
+      CONTACTS.filter(c=>c.num).map(contactRow).join("") +
+      (CONTACTS_EXAMPLE ? `<p class="note">${T(S.exampleNote)}</p>` : "");
   },
   sos(){
     return `<h2 style="font-family:var(--display);margin:0">${T(S.emerg)}</h2>
@@ -458,7 +849,132 @@ const V = {
         <a href="tel:15"><b>15</b>${T(S.samu)}</a><a href="tel:17"><b>17</b>${T(S.police)}</a><a href="tel:18"><b>18</b>${T(S.fire)}</a>
       </div>
       <h3 style="font-family:var(--display);margin:6px 0 0">${T(S.family)}</h3>` +
-      CONTACTS.slice(0,2).map((c,i)=>`<div class="contact"><div class="who"><strong>${esc(c.n)}</strong> · ${T(c.r)}<div class="num">${c.num}</div></div><a class="call" href="tel:${c.num.replace(/\s/g,"")}" aria-label="Appeler ${esc(c.n)}">${ic("phone")}</a></div>`).join("");
+      CONTACTS.filter(c=>c.num).slice(0,3).map(contactRow).join("");
+  },
+  pills(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.pillsT)}</h2>
+      ${st.boxEdit?`<p class="note">${T(S.boxHelp)}</p>`:""}
+      ${boxHTML()}
+      ${st.boxEdit?`<button class="big" data-boxdone="1">${T(S.doneEdit)}</button>`:`<p class="note">${T(S.takeEarly)}</p><button class="ghost" data-boxedit="1">✏ ${plainTxt(S.editBox)}</button>`}
+      <p class="note">${T(S.medNote)}</p>`;
+  },
+  agenda(){
+    const up=upcomingAppts();
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.agendaT)}</h2>
+      ${up.length?up.map(a=>`<div class="appt ${a.date===dkey()?"today":""}"><span class="when">${esc(dayLabel(a.date))}<br>${esc(a.time||"")}</span><span style="flex:1;min-width:0;font-weight:700">${esc(a.label)}</span>${sayBtn(`${dayLabel(a.date)} à ${a.time||""} : ${a.label}`)}</div>`).join(""):`<p class="hint">${T(S.noAppts)}</p>`}`;
+  },
+  alarm(){
+    const a=st.alarm||(st.alarm={h:7,m:0}), p=n=>String(n).padStart(2,"0");
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.alarmT)}</h2>
+      <div class="card stack">
+        <div class="clockset">
+          <div class="col"><button data-al="h+1" aria-label="Heure plus">+</button><span class="val">${p(a.h)}</span><button data-al="h-1" aria-label="Heure moins">−</button></div>
+          <span class="val">:</span>
+          <div class="col"><button data-al="m+5" aria-label="Minutes plus">+</button><span class="val">${p(a.m)}</span><button data-al="m-5" aria-label="Minutes moins">−</button></div>
+        </div>
+        <button class="big" data-setalarm="1">${T(S.alarmSet)}</button>
+        ${NATIVE?`<button class="ghost" data-native="showAlarms">${plainTxt(S.alarmList)}</button>`:""}
+        <p class="note">${T(S.alarmHelp)}</p>
+      </div>`;
+  },
+  web(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.webT)}</h2>
+      <form class="search" id="searchForm"><input id="q" type="search" enterkeyhint="search" placeholder="${esc(plainTxt(S.searchPh))}" aria-label="${esc(plainTxt(S.searchPh))}">
+        <button class="big" type="submit">${ic("search").replace('<svg','<svg style="width:26px;height:26px;vertical-align:middle"')} ${plainTxt(S.searchBtn)}</button></form>
+      <button class="ghost" data-listen="search">${ic("mic").replace('<svg','<svg style="width:24px;height:24px;vertical-align:middle"')} ${plainTxt(S.speakT)}</button>
+      <h3 class="sec">${T(S.sitesT)}</h3>
+      <div class="tilelist">${SITES.filter(s=>s.url).map(s=>`<button class="tile" data-url="${esc(s.url)}"><span class="ic">${ic("globe")}</span><span class="txt"><strong>${esc(s.n)}</strong><small>${esc(s.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</small></span></button>`).join("")}</div>
+      <p class="note">${T(S.webNote)}</p>`;
+  },
+  radio(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.radioT)}</h2>
+      ${st.playing?playerHTML():""}
+      <div class="tilelist">${RADIOS.filter(r=>r.url).map((r,i)=>`<button class="tile" data-radio="${i}"><span class="ic">${ic(isStream(r.url)?"play":"radio")}</span><span class="txt"><strong>${esc(r.n)}</strong></span></button>`).join("")}</div>
+      <p class="note">${T(S.radioNote)}</p>`;
+  },
+  music(){
+    const app=findApp(st.musicApp);
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.musicT)}</h2>
+      ${app?`<button class="tile hot" data-app="${esc(app.package)}"><span class="ic">${appIcon(app)}</span><span class="txt"><strong>${T(S.myMusic)}</strong><small>${esc(app.name)}</small></span></button>`:`<p class="hint">${T(S.noMusicApp)}</p>`}
+      <button class="tile" data-url="https://www.youtube.com/results?search_query=${encodeURIComponent("himene tahiti")}"><span class="ic">${ic("music")}</span><span class="txt"><strong>${T(S.himene)}</strong><small>YouTube</small></span></button>
+      <button class="tile" data-url="https://www.youtube.com/results?search_query=${encodeURIComponent("musique tahitienne")}"><span class="ic">${ic("music")}</span><span class="txt"><strong>${T(S.tahMusic)}</strong><small>YouTube</small></span></button>
+      <button class="tile" data-url="https://www.youtube.com/results?search_query=${encodeURIComponent("vieilles chansons tahitiennes")}"><span class="ic">${ic("music")}</span><span class="txt"><strong>${T(S.oldSongs)}</strong><small>YouTube</small></span></button>
+      <button class="tile" data-go="radio"><span class="ic">${ic("radio")}</span><span class="txt"><strong>${T(S.radioT)}</strong></span></button>`;
+  },
+  games(){
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.gamesT)}</h2>
+      <button class="tile hot" data-game="memory"><span class="ic">${TIARE}</span><span class="txt"><strong>${T(S.memT)}</strong><small>${T(S.memD)}</small></span></button>
+      <button class="tile" data-game="quiz"><span class="ic">${ic("star")}</span><span class="txt"><strong>${T(S.quizT)}</strong><small>${T(S.quizD)}</small></span></button>
+      ${(()=>{ const g=st.games.map(findApp).filter(Boolean); return g.length?`<h3 class="sec">${T(S.myGames)}</h3><div class="appgrid">${g.map(a=>`<button class="appbtn" data-app="${esc(a.package)}"><span class="appic">${appIcon(a)}</span><span class="appname">${esc(a.name)}</span></button>`).join("")}</div>`:""; })()}
+      ${GAMELINKS.filter(x=>x.url&&x.n).length?`<h3 class="sec">${T(S.webGames)}</h3><div class="tilelist">${GAMELINKS.filter(x=>x.url&&x.n).map(x=>`<button class="tile" data-url="${esc(x.url)}"><span class="ic">${ic("game")}</span><span class="txt"><strong>${esc(x.n)}</strong></span></button>`).join("")}</div>`:""}`;
+  },
+  memory(){
+    const m=st.mem, done=m.matched.length===m.deck.length;
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.memT)}</h2>
+      <p class="score">${m.moves} ${plainTxt(S.moves)}</p>
+      <div class="cards">${m.deck.map((c,i)=>{ const up=m.open.includes(i)||m.matched.includes(i);
+        return `<button class="mcard ${m.matched.includes(i)?"done":up?"up":""}" data-mc="${i}" aria-label="${up?esc(c[1]):"carte"}">${up?`${c[0]==="tiare"?TIARE:ic(c[0])}<span>${esc(c[1])}</span>`:`<span class="back">?</span>`}</button>`; }).join("")}</div>
+      ${done?`<div class="plain"><h3>${T(S.memWin)}</h3><button class="big" data-game="memory">${plainTxt(S.again)}</button></div>`:""}`;
+  },
+  quiz(){
+    const q=st.quiz, w=WORDS[q.order[q.i]];
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.quizT)}</h2>
+      <p class="score">${q.score} / ${q.asked}</p>
+      <div class="card stack"><p style="margin:0;text-align:center">${T(S.quizQ)}</p>
+        <div class="quizword" lang="ty">${esc(w[0])}</div>
+        ${sayBtn(w[0])}
+        ${q.opts.map(o=>`<button class="opt ${q.answered?(o===w[1]?"good":o===q.picked?"bad":""):""}" data-opt="${esc(o)}" ${q.answered?"disabled":""}>${esc(o)}</button>`).join("")}
+        ${q.answered?`<p style="margin:0;font-weight:700;text-align:center">${q.picked===w[1]?T(S.good):T({ty:"",fr:`${S.wasT.fr} « ${esc(w[1])} »`})}</p><button class="big" data-qnext="1">${T(S.next)}</button>`:""}
+      </div>`;
+  },
+  pin(){
+    const title = {create:S.pinCreate, confirm:S.pinConfirm, check:S.pinCheck}[st.pinMode];
+    return `<div class="card pinbox">
+      <div class="logo" style="width:60px;height:60px">${TIARE}</div>
+      <h3>${T(title)}</h3>
+      <div class="dots" aria-label="${st.pinEntry.length} / 4">${[0,1,2,3].map(i=>`<i class="${i<st.pinEntry.length?"on":""}"></i>`).join("")}</div>
+      ${st.pinMsg?`<p class="pinmsg" role="alert">${T(st.pinMsg)}</p>`:""}
+      <div class="keypad">${["1","2","3","4","5","6","7","8","9","","0","⌫"].map(k=>k===""?"<span></span>":`<button data-key="${k}" aria-label="${k==="⌫"?"Effacer":k}">${k}</button>`).join("")}</div>
+    </div>`;
+  },
+  family(){
+    const home = NATIVE
+      ? `<div class="status ${st.isDefault?"ok":"no"}">${ic(st.isDefault?"check":"alert")}<span>${T(st.isDefault?S.isHome:S.notHome)}</span></div>
+         ${st.isDefault?"":`<button class="big" data-native="chooseDefault">${T(S.makeHome)}</button><p class="note">${T(S.makeHomeHelp)}</p>`}`
+      : `<p class="hint">${T(S.androidOnly)}</p>`;
+    const pickList = (sel, attr) => st.apps===null ? `<p class="hint">${T(S.loading)}</p>` :
+      `<div class="setlist">${[...st.apps].sort((a,b)=>{const ia=sel.indexOf(a.package), ib=sel.indexOf(b.package);
+         if(ia>-1||ib>-1) return (ia<0?999:ia)-(ib<0?999:ib); return a.name.localeCompare(b.name,"fr");})
+        .map(a=>`<button class="pick" ${attr}="${esc(a.package)}" aria-pressed="${sel.includes(a.package)}"><span class="appic">${appIcon(a)}</span><span class="nm">${esc(a.name)}</span><span class="box">${sel.includes(a.package)?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>':""}</span></button>`).join("")}</div>`;
+    const apps = pickList(st.favs, "data-fav");
+    const contacts = CONTACTS.map((c,i)=>`<div class="crow">
+        <input id="c-n-${i}" data-c="${i}" data-f="n" value="${esc(c.n)}" placeholder="${plainTxt(S.cName)}" aria-label="${plainTxt(S.cName)}">
+        <input id="c-r-${i}" data-c="${i}" data-f="r" value="${esc(typeof c.r==="string"?c.r:c.r.fr)}" placeholder="${plainTxt(S.cRel)}" aria-label="${plainTxt(S.cRel)}">
+        <input id="c-p-${i}" class="full" data-c="${i}" data-f="num" value="${esc(c.num)}" inputmode="tel" placeholder="${plainTxt(S.cNum)}" aria-label="${plainTxt(S.cNum)}">
+        <button class="rm" data-rm="${i}">${plainTxt(S.remove)}</button>
+      </div>`).join("");
+    return `<h2 style="font-family:var(--display);margin:0">${T(S.famT)}</h2>
+      <div class="card stack"><h3>${T(S.followT)}</h3><p class="note">${T(S.followHelp)}</p>${historyHTML()}</div>
+      <div class="card stack"><h3>${T(S.homeT)}</h3>${home}</div>
+      <div class="card stack"><h3>${T(S.profileT)}</h3>
+        <input class="famselect" id="p-name" data-p="name" value="${esc(PROFILE.name||"")}" placeholder="${plainTxt(S.pName)}" aria-label="${plainTxt(S.pName)}">
+        <input class="famselect" id="p-msg" data-p="msg" value="${esc(PROFILE.msg||"")}" placeholder="${plainTxt(S.pMsg)}" aria-label="${plainTxt(S.pMsg)}">
+        <div class="rec">${st.recording?`<button class="ghost recording" data-rec="stop">${plainTxt(S.recStop)}</button>`:`<button class="ghost" data-rec="start">${plainTxt(S.recT)}</button>`}
+          ${store.get("voice",null)?`<button class="ghost" data-rec="play">${plainTxt(S.recPlay)}</button><button class="ghost" data-rec="del">${plainTxt(S.recDel)}</button>`:""}</div>
+        <p class="note">${T(S.recHelp)}</p></div>
+      <div class="card stack"><h3>${T(S.pillsSet)}</h3><p class="note">${T(S.boxHelp)}</p><button class="ghost" data-boxedit="1">✏ ${plainTxt(S.editBox)}</button></div>
+      <div class="card stack"><h3>${T(S.agendaSet)}</h3>${apptRows()}<button class="ghost" data-addl="agenda">+ ${plainTxt(S.addAppt)}</button></div>
+      <div class="card stack"><h3>${T(S.pickApps)}</h3><p class="note">${T(S.pickHelp)}</p>${apps}</div>
+      <div class="card stack"><h3>${T(S.contactsT)}</h3>${contacts}<button class="ghost" data-addc="1">+ ${plainTxt(S.add)}</button></div>
+      <div class="card stack"><h3>${T(S.gamesSet)}</h3><p class="note">${T(S.gamesHelp)}</p>${pickList(st.games, "data-gfav")}</div>
+      <div class="card stack"><h3>${T(S.gameLinksSet)}</h3><p class="note">${T(S.gameLinksHelp)}</p>${listRows("gamelinks",GAMELINKS)}<button class="ghost" data-addl="gamelinks">+ ${plainTxt(S.addGame)}</button></div>
+      <div class="card stack"><h3>${T(S.sitesSet)}</h3>${listRows("sites",SITES)}<button class="ghost" data-addl="sites">+ ${plainTxt(S.addSite)}</button></div>
+      <div class="card stack"><h3>${T(S.radiosSet)}</h3><p class="note">${T(S.radiosHelp)}</p>${listRows("radios",RADIOS)}<button class="ghost" data-addl="radios">+ ${plainTxt(S.addRadio)}</button></div>
+      <div class="card stack"><h3>${T(S.musicSet)}</h3>${st.apps===null?`<p class="hint">${T(S.loading)}</p>`:`<label class="note" for="musicSel">${T(S.musicSet)}</label><select class="famselect" id="musicSel"><option value="">${plainTxt(S.none)}</option>${(st.apps||[]).map(a=>`<option value="${esc(a.package)}" ${st.musicApp===a.package?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`}</div>
+      <div class="card stack">
+        <button class="ghost" data-changepin="1">${plainTxt(S.changePin)}</button>
+        ${NATIVE?`<button class="ghost" data-native="openSettings">${plainTxt(S.androidSettings)}</button>`:""}
+      </div>`;
   }
 };
 
@@ -483,8 +999,256 @@ function render(){
   if(src) src.addEventListener("input",e=>{st.text=e.target.value; st.ex=null;});
 }
 
-function go(v){ st.view=v; if(v!=="guides")st.guide=null; render(); scrollTo(0,0);
-  const titles={home:S.greet,text:S.simpT,guides:S.guideT,calls:S.callT,sos:S.sosT}; speak(plainTxt(titles[v])); }
+/* ---------- journée : dates, prises, rendez-vous, moral ---------- */
+const p2 = n => String(n).padStart(2,"0");
+const dkey = (d=new Date()) => `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;
+const nowMin = () => { const d=new Date(); return d.getHours()*60+d.getMinutes(); };
+const toMin = s => { const m=/(\d{1,2})[:hH.](\d{2})/.exec(s||""); return m ? (+m[1])*60+(+m[2]) : null; };
+const fmt = m => `${p2(Math.floor(m/60))}:${p2(m%60)}`;
+function greetObj(){ const n=PROFILE.name?` ${esc(PROFILE.name)}`:""; return {ty:`Ia ora na${n} !`, fr:`Bonjour${n} !`}; }
+function dayLabel(date){ const d=new Date(date+"T12:00:00"); if(isNaN(d)) return date;
+  if(date===dkey()) return plainTxt(S.todayT);
+  return `${DAYS.fr[d.getDay()]} ${d.getDate()} ${MONTHS.fr[d.getMonth()]}`; }
+function boxDoses(){
+  return BOX.map((c,i)=>{ const items=(c.items||[]).filter(x=>x.n); const m=toMin(c.t); if(!items.length || m===null) return null;
+    const def=COMPS.find(x=>x.id===c.id)||COMPS[i];
+    return {key:`box:${c.id}`, m, comp:c, def, p:{n:plainTxt(S[def.s]), note:items.map(x=>`${x.q?x.q+" ":""}${x.n}`).join(", ")}}; }).filter(Boolean);
+}
+function todayDoses(){
+  const now=nowMin(), log=LOG[dkey()]||{};
+  return boxDoses().map(d=>{ const done=log[d.key];
+    const state = done ? "taken" : now<d.m ? (now>=d.m-60 ? "soon" : "upcoming") : now<=d.m+180 ? "due" : "missed";
+    return {...d, state, done}; }).sort((a,b)=>a.m-b.m);
+}
+function boxHTML(){
+  const doses=todayDoses();
+  return `<div class="pillbox ${st.boxEdit?"editing":""}">${BOX.map((c,i)=>{ const def=COMPS.find(x=>x.id===c.id)||COMPS[i], d=doses.find(x=>x.key===`box:${c.id}`), items=(c.items||[]).filter(x=>x.n);
+    const style=`--cb:var(--c-${c.id}-b);--cbg:var(--c-${c.id})`;
+    if(st.boxEdit) return `<div class="comp edit" style="${style}">
+        <div class="lid">${ic(def.ic)}<b>${T(S[def.s])}</b></div>
+        <input type="time" id="box-t-${i}" data-box="${i}" data-bf="t" value="${esc(c.t)}" aria-label="Heure ${esc(plainTxt(S[def.s]))}">
+        ${(c.items||[]).map((x,j)=>`<div class="it"><input id="box-n-${i}-${j}" data-box="${i}" data-bi="${j}" data-bf="n" value="${esc(x.n)}" placeholder="${plainTxt(S.medName)}" aria-label="${plainTxt(S.medName)}"><button class="x" data-boxrm="${i}:${j}" aria-label="${plainTxt(S.remove)}">✕</button><input id="box-q-${i}-${j}" data-box="${i}" data-bi="${j}" data-bf="q" value="${esc(x.q||"")}" placeholder="${plainTxt(S.medQty)}" aria-label="${plainTxt(S.medQty)}"></div>`).join("")}
+        <button class="addit" data-boxadd="${i}">${plainTxt(S.addMed)}</button></div>`;
+    const state=d?d.state:"empty";
+    const badge={taken:`✓ ${plainTxt(S.taken)} ${d&&d.done||""}`, due:plainTxt(S.dueT), soon:plainTxt(S.dueT), missed:plainTxt(S.missed), upcoming:plainTxt(S.upcoming), empty:""}[state];
+    return `<div class="comp ${state}" style="${style}">
+        <div class="lid">${ic(def.ic)}<div><b>${T(S[def.s])}</b><span class="ct">${esc(c.t)}</span></div></div>
+        ${items.length?`<ul>${items.map(x=>`<li>${esc(x.n)}${x.q?`<span class="q">${esc(x.q)}</span>`:""}</li>`).join("")}</ul>`:`<span class="empty">${T(S.emptyC)}</span>`}
+        ${badge?`<span class="badge">${badge}</span>`:""}
+        ${["due","soon","missed"].includes(state)?`<button class="takebtn" data-take="${esc(d.key)}">${plainTxt(S.took)}</button>`:""}
+      </div>`; }).join("")}</div>`;
+}
+function doseRow(d){
+  const lbl={taken:`${plainTxt(S.taken)} ${d.done}`, due:plainTxt(S.dueT), soon:plainTxt(S.dueT), missed:plainTxt(S.missed), upcoming:plainTxt(S.upcoming)}[d.state];
+  return `<div class="dose ${d.state}"><span class="tm">${fmt(d.m)}</span><span class="nm">${esc(d.p.n)}${d.p.note?`<small>${esc(d.p.note)}</small>`:""}<small class="st">${lbl}</small></span>${["due","soon","missed"].includes(d.state)?`<button class="takebtn" data-take="${esc(d.key)}">${plainTxt(S.took)}</button>`:""}</div>`;
+}
+function upcomingAppts(){ const t=dkey(); return AGENDA.filter(a=>a.label && a.date && a.date>=t).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)); }
+function todayHTML(){
+  const doses=todayDoses().filter(d=>["due","soon","missed"].includes(d.state)), appts=upcomingAppts().filter(a=>a.date===dkey());
+  if(!doses.length && !appts.length) return "";
+  return doses.map(doseRow).join("") + appts.map(a=>`<div class="appt today"><span class="when">${esc(a.time||"")}</span><span style="flex:1;font-weight:700">${esc(a.label)}</span></div>`).join("");
+}
+function moodCard(){
+  const h=new Date().getHours(), today=MOODS[dkey()];
+  if(today && st.moodJust){ const low=today.v<=2;
+    return `<div class="moodq"><h3>${T(S.thanks)}</h3>${low?`<p style="margin:0;font-weight:700">${T(S.warnFam)}</p>${CONTACTS.filter(c=>c.num).slice(0,2).map(contactRow).join("")}
+      ${CONTACTS.filter(c=>c.num).slice(0,1).map(c=>`<a class="ghost" style="display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)" href="sms:${esc(c.num.replace(/\s/g,""))}?body=${encodeURIComponent((PROFILE.name||"")+" : je ne me sens pas très bien ce matin. Peux-tu m'appeler ?")}">${plainTxt(S.sendMsg)} ${esc(c.n)}</a>`).join("")}`:""}</div>`; }
+  if(today || h<5 || h>=13) return "";
+  return `<div class="moodq"><h3>${T(S.moodQ)}</h3><div class="faces">${[4,3,2,1].map(v=>`<button class="face" data-mood="${v}">${FACE(v)}<span>${plainTxt(S["m"+v])}</span></button>`).join("")}</div></div>`;
+}
+function historyHTML(){
+  const rows=[];
+  for(let i=0;i<14;i++){ const d=new Date(Date.now()-i*86400000), k=dkey(d), mo=MOODS[k], lg=LOG[k]||{};
+    const total=boxDoses().length;
+    const taken=Object.keys(lg).filter(x=>x.startsWith("box:")||x.startsWith("pill:")).length;
+    if(!mo && !taken && i>0) continue;
+    rows.push(`<div class="r"><span class="d">${esc(i===0?plainTxt(S.todayT):`${DAYS.fr[d.getDay()].slice(0,3)}. ${d.getDate()}/${d.getMonth()+1}`)}</span>${mo?FACE(mo.v)+`<span>${plainTxt(S["m"+mo.v])}</span>`:`<span class="note">—</span>`}<span style="margin-left:auto">${ic("pill").replace('<svg','<svg style="width:22px;height:22px;vertical-align:middle"')} ${taken}/${total}</span></div>`);
+  }
+  return `<div class="hist">${rows.join("")||`<p class="note">—</p>`}</div>`;
+}
+const pillRows = () => PILLS.map((p,i)=>`<div class="crow">
+    <input id="pills-n-${i}" data-l="pills" data-i="${i}" data-f="n" value="${esc(p.n||"")}" placeholder="${plainTxt(S.pillN)}" aria-label="${plainTxt(S.pillN)}">
+    <input id="pills-t-${i}" data-l="pills" data-i="${i}" data-f="times" value="${esc(p.times||"")}" inputmode="numeric" placeholder="${plainTxt(S.pillTimes)}" aria-label="${plainTxt(S.pillTimes)}">
+    <input id="pills-o-${i}" class="full" data-l="pills" data-i="${i}" data-f="note" value="${esc(p.note||"")}" placeholder="${plainTxt(S.pillNote)}" aria-label="${plainTxt(S.pillNote)}">
+    <button class="rm" data-rml="pills" data-i="${i}">${plainTxt(S.remove)}</button></div>`).join("");
+const apptRows = () => AGENDA.map((a,i)=>`<div class="crow">
+    <input id="agenda-d-${i}" type="date" data-l="agenda" data-i="${i}" data-f="date" value="${esc(a.date||"")}" aria-label="${plainTxt(S.apDate)}">
+    <input id="agenda-t-${i}" type="time" data-l="agenda" data-i="${i}" data-f="time" value="${esc(a.time||"")}" aria-label="${plainTxt(S.apTime)}">
+    <input id="agenda-l-${i}" class="full" data-l="agenda" data-i="${i}" data-f="label" value="${esc(a.label||"")}" placeholder="${plainTxt(S.apLabel)}" aria-label="${plainTxt(S.apLabel)}">
+    <button class="rm" data-rml="agenda" data-i="${i}">${plainTxt(S.remove)}</button></div>`).join("");
+const tileBtns = list => list.map(([v,i,c,l])=>`<button class="appbtn" data-go="${v}"><span class="appic"><span class="bi" style="background:${c}">${ic(i)}</span></span><span class="appname">${plainTxt(l)}</span></button>`).join("");
+
+/* ---------- rappels : annonce répétée toutes les 5 minutes jusqu'à « J'ai pris » ---------- */
+const lastPrompt = {};
+function markDone(key, value){ const k=dkey(); LOG[k]=LOG[k]||{}; LOG[k][key]=value; store.set("log",LOG); cancelNotifs(key); }
+function checkReminders(force){
+  if(document.visibilityState==="hidden") return;
+  const now=Date.now(), due=todayDoses().filter(d=>d.state==="due");
+  const soon=upcomingAppts().filter(a=>a.date===dkey()).map(a=>({a,m:toMin(a.time),key:`appt:${a.date}:${a.time}:${a.label}`}))
+    .filter(x=>x.m!==null && nowMin()>=x.m-60 && nowMin()<x.m && !(LOG[dkey()]||{})[x.key]);
+  const box=document.getElementById("remind");
+  if(!due.length && !soon.length){ box.hidden=true; return; }
+  if(due.length){ const names=due.map(d=>d.p.n+(d.p.note?` (${d.p.note})`:"")).join(", ");
+    box.innerHTML=`<div class="rico">${ic("pill")}</div><h2>${T(S.pillTime)}</h2><div class="what">${due.map(d=>`${esc(d.p.n)}<div style="font-size:.7em;font-weight:700;margin-top:6px">${d.comp.items.filter(x=>x.n).map(x=>`${esc(x.q?x.q+" · ":"")}${esc(x.n)}`).join("<br>")}</div>`).join("")}</div>
+      <button class="big" data-takeall="${esc(due.map(d=>d.key).join("|"))}">${ic("check").replace('<svg','<svg style="width:34px;height:34px;vertical-align:middle"')} ${T(S.took)}</button><button class="ghost" data-later="1">${plainTxt(S.later)}</button>`;
+    const key=due.map(d=>d.key).join("|");
+    if(box.hidden && st.snoozeUntil>now && !force) return;
+    box.hidden=false;
+    if(force || !lastPrompt[key] || now-lastPrompt[key]>=5*60000){ lastPrompt[key]=now;
+      sayNow(st.lang==="ty" ? `${S.pillTime.ty} ${names}` : `${PROFILE.name?PROFILE.name+", ":""}c'est l'heure de vos médicaments. ${due.map(d=>`${d.p.n} : ${d.p.note}`).join(". ")}. Touchez J'ai pris quand c'est fait.`); }
+    return;
+  }
+  const x=soon[0];
+  box.innerHTML=`<div class="rico">${ic("cal")}</div><h2>${T(S.apptSoon)}</h2><div class="what">${esc(x.a.time)} · ${esc(x.a.label)}</div><button class="big" data-apptok="${esc(x.key)}">${T(S.okT)}</button>`;
+  box.hidden=false;
+  if(!lastPrompt[x.key]){ lastPrompt[x.key]=now; sayNow(`Rendez-vous à ${x.a.time} : ${x.a.label}.`); }
+}
+
+/* notifications du téléphone (quand l'écran est éteint ou l'application fermée) */
+const hashId = s => { let h=0; for(const c of s) h=(h*31+c.charCodeAt(0))|0; return Math.abs(h)%200000*10; };
+function cancelNotifs(key){ if(!NATIVE) return; const base=hashId(key+dkey());
+  CAP.nativePromise("LocalNotifications","cancel",{notifications:[0,1,2,3,4,5,6].map(k=>({id:base+k}))}).catch(()=>{}); }
+function scheduleNotifs(){
+  if(!NATIVE) return;
+  CAP.nativePromise("LocalNotifications","getPending",{}).then(r=>{
+    const ids=(r.notifications||[]).map(n=>({id:n.id}));
+    return ids.length ? CAP.nativePromise("LocalNotifications","cancel",{notifications:ids}) : null;
+  }).catch(()=>{}).then(()=>{
+    const list=[], now=Date.now();
+    for(let day=0; day<2; day++){ const d=new Date(now+day*86400000), k=dkey(d), lg=LOG[k]||{};
+      boxDoses().forEach(({key, m, p})=>{ if(lg[key]) return;
+        const at=new Date(d.getFullYear(), d.getMonth(), d.getDate(), Math.floor(m/60), m%60).getTime(), base=hashId(key+k);
+        for(let r=0;r<7;r++){ const t=at+r*5*60000; if(t>now) list.push({id:base+r, title:"Marama Iti", body:`Médicaments du ${p.n.toLowerCase()} : ${p.note}`, schedule:{at:new Date(t), allowWhileIdle:true}}); } });
+      AGENDA.forEach(a=>{ if(a.date!==k || !a.label) return; const m=toMin(a.time); if(m===null) return;
+        const t=new Date(d.getFullYear(), d.getMonth(), d.getDate(), Math.floor(m/60), m%60).getTime()-3600000;
+        if(t>now) list.push({id:hashId("appt"+a.date+a.time+a.label), title:"Marama Iti", body:`Rendez-vous à ${a.time} : ${a.label}`, schedule:{at:new Date(t), allowWhileIdle:true}}); });
+    }
+    if(list.length) CAP.nativePromise("LocalNotifications","schedule",{notifications:list}).catch(()=>{});
+  });
+}
+
+/* message d'accueil vocal, une fois par jour */
+function dailyGreeting(){
+  const k=dkey(); if(store.get("greeted","")===k || new Date().getHours()<5) return;
+  store.set("greeted",k);
+  const v=store.get("voice",null);
+  if(v){ try{ new Audio(v).play().catch(()=>{}); }catch(e){} return; }
+  sayNow(`${plainTxt(greetObj()).replace(/<[^>]+>/g,"")} ${PROFILE.msg||""} ${timeSentence().replace(/^(Bonjour|Ia ora na)\.\s*/,"")}`);
+}
+
+/* enregistrement du message vocal de la famille */
+let rec=null, recChunks=[], recTimer=null;
+function startRec(){
+  if(!navigator.mediaDevices || !window.MediaRecorder) return sheet(plainTxt(S.profileT), `<div class="def">${T(S.recFail)}</div>`, S.close);
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    recChunks=[]; rec=new MediaRecorder(stream);
+    rec.ondataavailable=e=>{ if(e.data.size) recChunks.push(e.data); };
+    rec.onstop=()=>{ stream.getTracks().forEach(t=>t.stop()); clearTimeout(recTimer);
+      const fr=new FileReader(); fr.onload=()=>{ store.set("voice", fr.result); st.recording=false; render(); }; fr.readAsDataURL(new Blob(recChunks,{type:rec.mimeType||"audio/webm"})); };
+    rec.start(); st.recording=true; render(); recTimer=setTimeout(()=>{ if(rec&&rec.state==="recording") rec.stop(); }, 10000);
+  }).catch(()=>sheet(plainTxt(S.profileT), `<div class="def">${T(S.recFail)}</div>`, S.close));
+}
+
+const isStream = u => /\.(mp3|aac|ogg|m3u8|pls)(\?|$)|\/stream|icecast|shoutcast|:\d{4}\//i.test(u||"");
+const listRows = (key,arr) => arr.map((s,i)=>`<div class="crow">
+    <input id="${key}-n-${i}" data-l="${key}" data-i="${i}" data-f="n" value="${esc(s.n)}" placeholder="${plainTxt(S.siteName)}" aria-label="${plainTxt(S.siteName)}">
+    <input id="${key}-u-${i}" data-l="${key}" data-i="${i}" data-f="url" value="${esc(s.url)}" inputmode="url" placeholder="${plainTxt(S.siteUrl)}" aria-label="${plainTxt(S.siteUrl)}">
+    <button class="rm" data-rml="${key}" data-i="${i}">${plainTxt(S.remove)}</button></div>`).join("");
+const LISTS = {gamelinks:()=>GAMELINKS, sites:()=>SITES, radios:()=>RADIOS, pills:()=>PILLS, agenda:()=>AGENDA};
+function saveList(key){ store.set(key, LISTS[key]()); }
+let schedT=null; function scheduleSoon(){ clearTimeout(schedT); schedT=setTimeout(scheduleNotifs, 3000); }
+function playerHTML(){ return `<div class="player">${ic("music").replace('<svg','<svg style="width:30px;height:30px;color:var(--ok)"')}<span class="nm">${plainTxt(S.playing)} : ${esc(st.playing)}</span><button class="stopbtn" data-stop="1">${ic("stop")} ${plainTxt(S.stopT)}</button></div>`; }
+let audio=null;
+function playRadio(r){
+  if(!isStream(r.url)) return openUrl(r.url);
+  try{ if(audio) audio.pause(); audio=new Audio(r.url); audio.play().then(()=>{ st.playing=r.n; render(); }).catch(()=>openUrl(r.url)); }catch(e){ openUrl(r.url); }
+}
+function stopRadio(){ if(audio){ audio.pause(); audio=null; } st.playing=null; render(); }
+function openUrl(url){
+  if(NATIVE){ CAP.nativePromise("Browser","open",{url, toolbarColor:"#0b7a80"}).catch(()=>{ location.href=url; }); return; }
+  const w = window.open(url,"_blank","noopener");
+  if(!w) sheet(plainTxt(S.webT), `<p><a class="big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="${esc(url)}" target="_blank" rel="noopener">${plainTxt(S.openLink)}</a></p>`, S.close);
+}
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function newMemory(){ st.mem={deck:shuffle([...MEM,...MEM]), open:[], matched:[], moves:0, lock:false}; }
+function newQuizQ(){ const q=st.quiz, w=WORDS[q.order[q.i]];
+  const others=shuffle(WORDS.filter(x=>x[1]!==w[1])).slice(0,2).map(x=>x[1]); q.opts=shuffle([w[1],...others]); q.answered=false; q.picked=null; }
+function newQuiz(){ st.quiz={order:shuffle(WORDS.map((_,i)=>i)), i:0, score:0, asked:0}; newQuizQ(); }
+
+/* ---------- commandes vocales ---------- */
+let recog=null;
+function listen(mode){
+  const btn=document.querySelector(".mic"); if(btn) btn.classList.add("listening");
+  const done = txt => { if(btn) btn.classList.remove("listening"); if(mode==="search"){ if(txt) openUrl("https://www.google.com/search?q="+encodeURIComponent(txt)); return; } handleCommand(txt||""); };
+  if(NATIVE){ L("listen",{lang:"fr-FR", prompt:"Parlez maintenant"}).then(r=>{ if(r.text) done(r.text); else if(btn) btn.classList.remove("listening"); }).catch(()=>{ if(btn) btn.classList.remove("listening"); typeCommand(mode); }); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ if(btn) btn.classList.remove("listening"); return typeCommand(mode); }
+  try{ recog=new SR(); recog.lang="fr-FR"; recog.interimResults=false;
+    recog.onresult=e=>done(e.results[0][0].transcript);
+    recog.onerror=()=>{ if(btn) btn.classList.remove("listening"); typeCommand(mode); };
+    recog.onend=()=>{ if(btn) btn.classList.remove("listening"); };
+    recog.start(); }catch(e){ if(btn) btn.classList.remove("listening"); typeCommand(mode); }
+}
+function typeCommand(mode){
+  sheet(plainTxt(S.speakT), `<p class="note">${T(S.typeCmd)}</p><form class="search" id="cmdForm" data-mode="${mode||""}"><input id="cmdIn" placeholder="Appelle Marie" aria-label="Demande"><button class="big" type="submit">${plainTxt(S.send)}</button></form><p class="note">${S.speakHint.fr}</p>`, S.close);
+  setTimeout(()=>{ const i=document.getElementById("cmdIn"); if(i) i.focus(); },50);
+}
+function reply(fr, ty){ const txt = st.lang==="ty" && ty ? ty : fr; sayNow(txt); }
+function handleCommand(raw){
+  const t=fold(raw).replace(/[.,!?]/g," ");
+  const has = re => re.test(t);
+  const findIn = (arr, key) => arr.find(x=>x[key] && fold(x[key]).length>1 && t.includes(fold(x[key])));
+  const heard = `<p class="note">${T(S.heard)} « ${esc(raw)} »</p>`;
+  if(has(/appel|telephon|pi'i|sonne/)){
+    const c = CONTACTS.filter(c=>c.num).find(c=>t.includes(fold(c.n)) || (typeof c.r==="string"?c.r:c.r.fr) && t.includes(fold(typeof c.r==="string"?c.r:c.r.fr)));
+    if(c){ reply(`Appeler ${c.n} ?`, `Pi'i ia ${c.n} ?`);
+      return sheet(esc(c.n), heard+`<div class="num" style="font-size:2em;font-weight:700;text-align:center">${esc(c.num)}</div><div class="row"><a class="big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="tel:${esc(c.num.replace(/\s/g,""))}">${plainTxt(S.yesCall)}</a></div>`, S.no); }
+    reply("Qui voulez-vous appeler ?"); return go("calls");
+  }
+  if(has(/urgence|secours|samu|pompier|au secours|tauturu/)){ reply("Voici les numéros d'urgence."); return go("sos"); }
+  if(has(/heure|quel jour|date|hora/)){ reply(timeSentence()); return sheet(plainTxt(S.greet), heard+`<div class="clockrow">${clockHTML()}</div>`, S.close); }
+  if(has(/radio|ratio/)){ const r=findIn(RADIOS,"n"); go("radio"); if(r){ reply(r.n); playRadio(r); } else reply("Choisissez une station."); return; }
+  if(has(/musique|chanson|chant|himene|pehe/)){ reply("Voici la musique."); return go("music"); }
+  if(has(/jeu|jouer|hauti|memoire/)){ reply("Voici les jeux."); return go("games"); }
+  if(has(/meteo|temps qu.il fait/)){ const s=findIn(SITES,"n")||SITES[0]; reply("J'ouvre la météo."); return openUrl(s.url); }
+  const m = t.match(/(?:cherche|recherche|google)\s+(.+)/);
+  if(m){ reply("Je cherche "+m[1]); return openUrl("https://www.google.com/search?q="+encodeURIComponent(m[1])); }
+  if(has(/internet|navigateur|site/)){ reply("Voici internet."); return go("web"); }
+  if(has(/^\s*(lis|lire|relis)|lis.moi|lire le/)){ if(st.text){ reply(st.text); return go("text"); } reply(timeSentence()); return; }
+  const app = findIn(st.apps||[], "name");
+  if(app){ reply("J'ouvre "+app.name); if(NATIVE) L("launch",{package:app.package}).catch(()=>{}); else sheet(esc(app.name), heard+`<div class="def">${S.openApp.fr} « ${esc(app.name)} ».</div>`, S.close); return; }
+  const site = findIn(SITES,"n"); if(site){ reply("J'ouvre "+site.n); return openUrl(site.url); }
+  const c2 = CONTACTS.filter(c=>c.num).find(c=>t.includes(fold(c.n))); if(c2) return handleCommand("appelle "+c2.n);
+  reply(S.notUnderstood.fr, S.notUnderstood.ty);
+  sheet(plainTxt(S.speakT), heard+`<div class="def">${T(S.notUnderstood)}</div><button class="ghost" data-listen="1">${plainTxt(S.speakT)}</button>`, S.close);
+}
+
+function openFamily(){
+  st.pinEntry=""; st.pinMsg=null; st.pinMode = st.pin ? "check" : "create"; go("pin");
+}
+function pinKey(k){
+  if(k==="⌫"){ st.pinEntry=st.pinEntry.slice(0,-1); return render(); }
+  if(st.pinEntry.length>=4) return;
+  st.pinEntry+=k; st.pinMsg=null;
+  if(st.pinEntry.length<4) return render();
+  const e=st.pinEntry; st.pinEntry="";
+  if(st.pinMode==="create"){ st.pinFirst=e; st.pinMode="confirm"; return render(); }
+  if(st.pinMode==="confirm"){
+    if(e===st.pinFirst){ st.pin=e; store.set("pin",e); st.authed=true; if(st.pinNext==="box"){ st.pinNext=null; st.boxEdit=true; return go("pills"); } return go("family"); }
+    st.pinMode="create"; st.pinMsg=S.pinDiff; return render();
+  }
+  if(e===st.pin){ st.authed=true; if(st.pinNext==="box"){ st.pinNext=null; st.boxEdit=true; return go("pills"); } return go("family"); }
+  st.pinMsg=S.pinWrong; render();
+}
+function saveContacts(){ store.set("contacts", CONTACTS); CONTACTS_EXAMPLE=false; }
+function refreshNative(){
+  if(!NATIVE) return;
+  L("getApps").then(r=>{ st.apps=(r.apps||[]).sort((a,b)=>a.name.localeCompare(b.name,"fr")); if(["home","family"].includes(st.view)) render(); }).catch(()=>{ st.apps=[]; render(); });
+  L("isDefault").then(r=>{ st.isDefault=!!r.value; if(st.view==="family") render(); }).catch(()=>{});
+}
+
+function go(v){ if(v==="home"){ st.authed=false; st.boxEdit=false; } st.view=v; if(v!=="guides")st.guide=null; render(); scrollTo(0,0);
+  const titles={pills:S.pillsT,agenda:S.agendaT,alarm:S.alarmT,home:S.greet,text:S.simpT,guides:S.guideT,calls:S.callT,sos:S.sosT,pin:S.famT,family:S.famT,web:S.webT,radio:S.radioT,music:S.musicT,games:S.gamesT,memory:S.memT,quiz:S.quizT}; speak(plainTxt(titles[v])); }
 
 function sheet(title, bodyHTML, btn){
   document.getElementById("sheetTitle").innerHTML = title;
@@ -498,15 +1262,71 @@ function sheet(title, bodyHTML, btn){
 document.addEventListener("click", e=>{
   const t = e.target.closest("button, mark.j"); if(!t) return;
   if(t.dataset.go) return go(t.dataset.go);
+  if(t.dataset.speak!==undefined){ sayNow(t.dataset.speak==="@time"?timeSentence():t.dataset.speak); return; }
+  if(t.dataset.family) return openFamily();
+  if(t.dataset.boxedit){ if(st.authed){ st.boxEdit=true; return go("pills"); } st.pinNext="box"; return openFamily(); }
+  if(t.dataset.boxdone){ st.boxEdit=false; store.set("pillbox",BOX); scheduleSoon(); return render(); }
+  if(t.dataset.boxadd!==undefined){ const i=+t.dataset.boxadd; BOX[i].items.push({n:"",q:""}); store.set("pillbox",BOX); render(); const el=document.getElementById(`box-n-${i}-${BOX[i].items.length-1}`); if(el) el.focus(); return; }
+  if(t.dataset.boxrm){ const [i,j]=t.dataset.boxrm.split(":").map(Number);
+    if(st.confirmRm!=="box"+i+":"+j){ st.confirmRm="box"+i+":"+j; t.textContent="?"; t.style.background="var(--alert)"; t.style.color="var(--surface)"; return; }
+    st.confirmRm=null; BOX[i].items.splice(j,1); store.set("pillbox",BOX); scheduleSoon(); const y=scrollY; render(); scrollTo(0,y); return; }
+  if(t.dataset.mood){ MOODS[dkey()]={v:+t.dataset.mood, t:fmt(nowMin())}; store.set("moods",MOODS); st.moodJust=true; sayNow(plainTxt(S.thanks)+(+t.dataset.mood<=2?" "+plainTxt(S.warnFam):"")); return render(); }
+  if(t.dataset.take){ markDone(t.dataset.take, fmt(nowMin())); sayNow(plainTxt(S.thanks)); render(); return checkReminders(); }
+  if(t.dataset.takeall){ t.dataset.takeall.split("|").forEach(k=>markDone(k, fmt(nowMin()))); document.getElementById("remind").hidden=true; sayNow(plainTxt(S.thanks)); return render(); }
+  if(t.dataset.later){ st.snoozeUntil=Date.now()+5*60000; document.getElementById("remind").hidden=true; return; }
+  if(t.dataset.apptok){ markDone(t.dataset.apptok,"ok"); document.getElementById("remind").hidden=true; return; }
+  if(t.dataset.al){ const a=st.alarm, f=t.dataset.al; if(f[0]==="h") a.h=(a.h+(f[1]==="+"?1:23))%24; else a.m=(a.m+(f[1]==="+"?5:55))%60; return render(); }
+  if(t.dataset.setalarm){ const a=st.alarm, msg=PROFILE.name?`Ia ora na ${PROFILE.name}`:"Marama Iti";
+    if(NATIVE){ L("setAlarm",{hour:a.h, minute:a.m, message:msg}).catch(()=>sheet(plainTxt(S.alarmT), `<div class="def">${T({ty:"",fr:"L'horloge du téléphone n'a pas pu être ouverte."})}</div>`, S.close)); }
+    else sheet(plainTxt(S.alarmT), `<div class="def">${T({ty:"",fr:`Dans l'application Android, le réveil sera réglé à ${p2(a.h)}:${p2(a.m)} dans l'horloge du téléphone.`})}</div>`, S.close);
+    return; }
+  if(t.dataset.rec){ const r=t.dataset.rec;
+    if(r==="start") return startRec();
+    if(r==="stop"){ if(rec&&rec.state==="recording") rec.stop(); return; }
+    if(r==="play"){ const v=store.get("voice",null); if(v) try{ new Audio(v).play().catch(()=>{}); }catch(e){} return; }
+    if(r==="del"){ try{ localStorage.removeItem("marama-voice"); }catch(e){} return render(); } }
+  if(t.dataset.listen){ closeSheet(); return listen(t.dataset.listen); }
+  if(t.dataset.url) return openUrl(t.dataset.url);
+  if(t.dataset.radio!==undefined) return playRadio(RADIOS.filter(r=>r.url)[+t.dataset.radio]);
+  if(t.dataset.stop) return stopRadio();
+  if(t.dataset.game){ if(t.dataset.game==="memory") newMemory(); else newQuiz(); return go(t.dataset.game); }
+  if(t.dataset.mc!==undefined){ const m=st.mem, i=+t.dataset.mc;
+    if(m.lock || m.open.includes(i) || m.matched.includes(i)) return;
+    m.open.push(i);
+    if(m.open.length===2){ m.moves++; const [a,b]=m.open;
+      if(m.deck[a][0]===m.deck[b][0]){ m.matched.push(a,b); m.open=[]; sayNow(m.deck[a][1]); if(m.matched.length===m.deck.length) setTimeout(()=>sayNow(plainTxt(S.memWin)),700); }
+      else { m.lock=true; setTimeout(()=>{ m.open=[]; m.lock=false; render(); }, 1300); } }
+    return render(); }
+  if(t.dataset.opt!==undefined){ const q=st.quiz, w=WORDS[q.order[q.i]]; q.answered=true; q.picked=t.dataset.opt; q.asked++; if(q.picked===w[1]){ q.score++; sayNow(plainTxt(S.good)); } else sayNow(`${S.wasT.fr} ${w[1]}`); return render(); }
+  if(t.dataset.qnext){ const q=st.quiz; q.i=(q.i+1)%q.order.length; newQuizQ(); return render(); }
+  if(t.dataset.addl){ const k=t.dataset.addl; LISTS[k]().push({n:"",url:""}); saveList(k); render(); const ins=document.getElementById(k+"-n-"+(LISTS[k]().length-1)); if(ins){ins.scrollIntoView({block:"center"}); ins.focus();} return; }
+  if(t.dataset.rml){ const k=t.dataset.rml, i=+t.dataset.i, key=k+i;
+    if(st.confirmRm!==key){ st.confirmRm=key; t.classList.add("confirm"); t.textContent=st.lang==="ty"?"Fa'a'ore ? Pāta'i fa'ahou":"Retirer ? Touchez encore pour confirmer"; return; }
+    st.confirmRm=null; LISTS[k]().splice(i,1); saveList(k); const y=scrollY; render(); scrollTo(0,y); return; }
+  if(t.dataset.key) return pinKey(t.dataset.key);
+  if(t.dataset.app){ const a=findApp(t.dataset.app);
+    if(NATIVE){ L("launch",{package:t.dataset.app}).catch(()=>sheet(esc(a?a.name:""), `<div class="def">${T({ty:"'Aita i 'itehia.",fr:"Cette application n'est plus installée."})}</div>`, S.close)); return; }
+    sheet(esc(a.name), `<div class="def">${T({ty:"",fr:S.openApp.fr+" « "+esc(a.name)+" »."})}</div>`, S.close); return; }
+  if(t.dataset.fav){ const p=t.dataset.fav, i=st.favs.indexOf(p); if(i>-1) st.favs.splice(i,1); else st.favs.push(p);
+    store.set("favs", st.favs); const y=scrollY; render(); scrollTo(0,y); return; }
+  if(t.dataset.gfav){ const p=t.dataset.gfav, i=st.games.indexOf(p); if(i>-1) st.games.splice(i,1); else st.games.push(p);
+    store.set("games", st.games); const y=scrollY; render(); scrollTo(0,y); return; }
+  if(t.dataset.native){ L(t.dataset.native).catch(()=>{}); return; }
+  if(t.dataset.addc){ CONTACTS.push({n:"",r:"",num:""}); saveContacts(); render(); const ins=document.getElementById("c-n-"+(CONTACTS.length-1)); if(ins){ins.scrollIntoView({block:"center"}); ins.focus();} return; }
+  if(t.dataset.rm){ const i=+t.dataset.rm;
+    if(st.confirmRm!==i){ st.confirmRm=i; t.classList.add("confirm"); t.textContent=st.lang==="ty"?"Fa'a'ore ? Pāta'i fa'ahou":"Retirer ? Touchez encore pour confirmer"; return; }
+    st.confirmRm=null; CONTACTS.splice(i,1); saveContacts(); const y=scrollY; render(); scrollTo(0,y); return; }
+  if(t.dataset.changepin){ st.pinEntry=""; st.pinMsg=null; st.pinMode="create"; return go("pin"); }
   if(t.dataset.lang){ st.lang=t.dataset.lang; save(); return render(); }
-  if(t.id==="backBtn"){ if(st.guide){st.guide=null; return render();} return go("home"); }
+  if(t.id==="backBtn") return goBack();
   if(t.id==="voiceBtn"){ st.voice=!st.voice; render(); speak(st.voice?(st.lang==="ty"?"Ua ara te reo.":"Aide vocale activée."):""); if(!st.voice&&"speechSynthesis" in window)speechSynthesis.cancel(); return; }
   if(t.id==="bigger"){ st.scale=Math.min(1.6,+(st.scale+.1).toFixed(1)); save(); return render(); }
   if(t.id==="smaller"){ st.scale=Math.max(.9,+(st.scale-.1).toFixed(1)); save(); return render(); }
   if(t.dataset.ex){ const ex=EX.find(x=>x.id===t.dataset.ex); st.ex=ex.id; st.text=ex.text; return render(); }
   if(t.id==="go"){ st.text=document.getElementById("src").value; render(); const r=view.querySelector(".readout"); if(r) r.scrollIntoView({behavior:"smooth",block:"center"}); return; }
   if(t.matches("mark.j")){ const d=DICT[+t.dataset.d];
-    sheet(esc(t.textContent), `<div class="def">${T({ty:d.ty,fr:d.fr})}</div>`); speak(st.lang==="ty"?d.ty:d.fr); return; }
+    const sentence=t.textContent+". "+(st.lang==="ty"?d.ty:d.fr);
+    sheet(esc(t.textContent), `<div class="def">${T({ty:d.ty,fr:d.fr})}</div>${sayBtn(sentence)}`); speak(sentence); return; }
   if(t.id==="sheetClose"){ document.getElementById("sheet").hidden=true; return; }
   if(t.dataset.guide){ st.guide=t.dataset.guide; st.step=0; render(); const s=GUIDES.find(g=>g.id===st.guide).steps[0]; speak(plainTxt(s.t)+". "+plainTxt(s.x)); return; }
   if(t.id==="prev"){ if(st.step>0){st.step--; render();} return; }
@@ -524,8 +1344,48 @@ document.addEventListener("keydown", e=>{
 });
 document.getElementById("sheet").addEventListener("click", e=>{ if(e.target.id==="sheet") e.currentTarget.hidden=true; });
 
+function closeSheet(){ const s=document.getElementById("sheet"); if(s.hidden) return false; s.hidden=true; return true; }
+function goBack(){ if(closeSheet()) return; if(st.guide){ st.guide=null; return render(); } if(["memory","quiz"].includes(st.view)) return go("games"); if(st.view!=="home") go("home"); }
+
+/* contacts modifiés dans les réglages famille */
+document.addEventListener("submit", e=>{
+  e.preventDefault();
+  if(e.target.id==="searchForm"){ const q=document.getElementById("q").value.trim(); if(q) openUrl("https://www.google.com/search?q="+encodeURIComponent(q)); }
+  if(e.target.id==="cmdForm"){ const v=document.getElementById("cmdIn").value.trim(), mode=e.target.dataset.mode; closeSheet(); if(!v) return;
+    if(mode==="search") openUrl("https://www.google.com/search?q="+encodeURIComponent(v)); else handleCommand(v); }
+});
+document.addEventListener("change", e=>{ if(e.target.id==="musicSel"){ st.musicApp=e.target.value; store.set("musicApp", st.musicApp); } });
+document.addEventListener("input", e=>{
+  const el=e.target;
+  if(el.dataset.p){ PROFILE[el.dataset.p]=el.value; store.set("profile",PROFILE); return; }
+  if(el.dataset.box!==undefined){ const c=BOX[+el.dataset.box]; if(el.dataset.bi!==undefined) c.items[+el.dataset.bi][el.dataset.bf]=el.value; else c[el.dataset.bf]=el.value; store.set("pillbox",BOX); scheduleSoon(); return; }
+  if(el.dataset.l){ LISTS[el.dataset.l]()[+el.dataset.i][el.dataset.f]=el.value; saveList(el.dataset.l); if(["pills","agenda"].includes(el.dataset.l)) scheduleSoon(); return; }
+  if(el.dataset.c===undefined) return;
+  CONTACTS[+el.dataset.c][el.dataset.f]=el.value; saveContacts();
+});
+
+/* horloge et batterie */
+setInterval(()=>{ const c=document.getElementById("clock"); if(c) c.innerHTML=clockHTML(); }, 20000);
+if(navigator.getBattery) navigator.getBattery().then(b=>{
+  const upd=()=>{ st.battery=Math.round(b.level*100); const c=document.getElementById("clock"); if(c) c.innerHTML=clockHTML(); };
+  upd(); b.addEventListener("levelchange",upd);
+}).catch(()=>{});
+
+/* Android : bouton retour, retour à l'accueil, liste des applications */
+if(NATIVE){
+  try{ CAP.nativeCallback("App","addListener",{eventName:"backButton"},()=>goBack()); }catch(e){}
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible"){ if(!["family","pin"].includes(st.view)){ st.guide=null; st.view="home"; render(); } refreshNative(); }
+  });
+  refreshNative();
+}
+
 /* démarrage : ouvre sur l'accueil */
 render();
+setInterval(checkReminders, 20000);
+setTimeout(()=>{ checkReminders(); dailyGreeting(); }, 1500);
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible"){ checkReminders(true); dailyGreeting(); } });
+if(NATIVE){ CAP.nativePromise("LocalNotifications","requestPermissions",{}).catch(()=>{}).then(scheduleNotifs); }
 </script>
 
 <script>

@@ -1,12 +1,15 @@
 {
   "name": "marama-iti",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "private": true,
   "description": "Assistant simplifié pour smartphone, en reo tahiti et en français",
   "license": "MIT",
   "dependencies": {
     "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/browser": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/local-notifications": "^7.0.0"
   }
 }
