@@ -53,3 +53,18 @@ if "<queries>" not in m:
 
 manifest.write_text(m, encoding="utf-8")
 print("Manifeste Android prêt.")
+
+# 4. Numéro de version qui augmente à chaque construction
+#    (Android n'installe une mise à jour que si ce numéro est plus grand)
+import os
+gradle = root / "android" / "app" / "build.gradle"
+if gradle.exists():
+    g = gradle.read_text(encoding="utf-8")
+    code = os.environ.get("VERSION_CODE")
+    name = os.environ.get("VERSION_NAME")
+    if code:
+        g = re.sub(r"versionCode\s+\d+", f"versionCode {int(code)}", g)
+    if name:
+        g = re.sub(r'versionName\s+"[^"]*"', f'versionName "{name}"', g)
+    gradle.write_text(g, encoding="utf-8")
+    print(f"Version Android : {name or '?'} ({code or '?'})")

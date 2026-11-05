@@ -31,7 +31,19 @@ Une application pour aider les personnes âgées à utiliser leur smartphone ou 
 https://github.com/Brian-1844/marama-iti/releases/latest/download/marama-iti.apk
 Ouvrez le fichier et autorisez l'installation depuis cette source.
 
+**iPhone et iPad** : ouvrez `https://brian-1844.github.io/marama-iti/` dans **Safari**, touchez **Partager**, puis **« Sur l'écran d'accueil »** et **« Ajouter »**. Marama Iti s'ouvre ensuite en plein écran comme une application. Sur iPhone : pas de mode écran d'accueil (Apple l'interdit), les applications s'ouvrent par des raccourcis, le réveil se règle dans l'app Horloge, et les rappels de médicaments sonnent quand Marama Iti est ouverte. Conseil : activez l'**Accès guidé** (Réglages → Accessibilité) pour rester dans Marama Iti.
+
 **En faire l'écran d'accueil** : ouvrez Marama Iti → *Réglages famille* (en bas de l'accueil) → créez le code → *Faire de Marama Iti l'écran d'accueil* → choisissez « Marama Iti ». Pour revenir à l'écran Android habituel : Réglages Android → Applications → Applications par défaut → Application d'accueil.
+
+## Mises à jour
+
+L'APK est signé avec une **clé fixe** : chaque nouvelle version s'installe par-dessus l'ancienne, sans rien perdre (pilulier, contacts, code famille, moral).
+
+- La clé se range dans **Settings → Secrets and variables → Actions** : `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`. Ne mettez jamais le fichier de la clé dans le dépôt.
+- Sans ces secrets, l'APK est construit avec une clé de test, et les mises à jour ne s'installent pas par-dessus.
+- Le numéro de version augmente tout seul à chaque construction (Marama Iti 1.12, 1.13…).
+- Une fois par jour, l'application vérifie s'il existe une nouvelle version dans « Releases ». Si oui, un message « Nouvelle version de Marama Iti » apparaît sur l'accueil avec un bouton « Mettre à jour ». On peut aussi vérifier dans Réglages famille.
+- Si ce dépôt devient privé : créez un dépôt public de téléchargement, ajoutez la variable `DOWNLOAD_REPO` (ex. `Brian-1844/marama-iti-telechargement`) et le secret `DOWNLOAD_REPO_TOKEN`, puis changez `UPDATE_REPO` au début du script de `docs/index.html`.
 
 ## Modifier l'application
 

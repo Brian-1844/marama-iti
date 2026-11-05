@@ -8,7 +8,11 @@
 <meta name="theme-color" content="#0b7a80">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Marama Iti">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0}img{max-width:100%}[hidden]{display:none!important}
@@ -323,6 +327,18 @@ nav.bottom button svg{width:32px;height:32px}
 @media (max-width:360px){.pillbox{grid-template-columns:1fr}}
 .pillbox.editing{grid-template-columns:1fr}
 .comp.edit input{font-size:1em;min-height:52px}
+
+/* Update banner */
+.updbox{background:var(--surface);border:3px solid var(--lagoon);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.updbox h3{margin:0;font-family:var(--display);font-size:1.15em;display:flex;align-items:center;gap:10px}
+.updbox h3 svg{width:30px;height:30px;color:var(--lagoon);flex:none}
+.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:1.05em}
+
+/* Install helper (iPhone / Android browser) */
+.install{background:var(--lagoon-soft);border:3px solid var(--lagoon);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.install h3{margin:0;font-family:var(--display);font-size:1.15em}
+.install .share{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:8px;background:var(--surface);color:#0a7aff;vertical-align:middle}
+.install .share svg{width:22px;height:22px}
 </style>
 </head>
 <body>
@@ -536,6 +552,28 @@ const S = {
   addMed:{ty:"",fr:"+ Ajouter"}, medName:{ty:"",fr:"Médicament"}, medQty:{ty:"",fr:"Combien (ex. 1 comprimé)"},
   boxHelp:{ty:"",fr:"Écrivez dans chaque case les médicaments et le nombre à prendre, comme sur l'ordonnance. Changez l'heure si besoin."},
   takeEarly:{ty:"",fr:"Vous pouvez valider jusqu'à une heure avant."},
+  updT:{ty:"E huru 'āpī tō Marama Iti",fr:"Nouvelle version de Marama Iti"},
+  updD:{ty:"",fr:"Une amélioration est prête. Vos réglages, médicaments et contacts sont gardés."},
+  updBtn:{ty:"Fa'a'āpī",fr:"Mettre à jour"},
+  updStep1:{ty:"",fr:"Touchez « Télécharger » ci-dessous."},
+  updStep2:{ty:"",fr:"Quand le téléchargement est fini, touchez le fichier marama-iti.apk."},
+  updStep3:{ty:"",fr:"Touchez « Mettre à jour » (ou « Installer »). Si Android le demande, autorisez cette source une fois."},
+  updStep4:{ty:"",fr:"Rouvrez Marama Iti : tout est comme avant."},
+  download:{ty:"Huti mai",fr:"Télécharger"},
+  verT:{ty:"",fr:"Version de l'application"}, checkUpd:{ty:"",fr:"Vérifier les mises à jour"},
+  upToDate:{ty:"Ua 'āpī",fr:"Marama Iti est à jour."},
+  updFail:{ty:"",fr:"Impossible de vérifier pour l'instant (pas d'internet ?). Réessayez plus tard."},
+  instT:{ty:"",fr:"Installer Marama Iti sur ce téléphone"},
+  instIos1:{ty:"",fr:"Touchez le bouton Partager en bas de Safari"},
+  instIos2:{ty:"",fr:"Faites défiler et touchez « Sur l'écran d'accueil »."},
+  instIos3:{ty:"",fr:"Touchez « Ajouter ». L'icône Marama Iti apparaît avec les autres applications."},
+  instIosNote:{ty:"",fr:"Si vous n'êtes pas dans Safari, ouvrez d'abord cette page dans Safari."},
+  instAndroid:{ty:"",fr:"Ajoutez Marama Iti à l'écran d'accueil pour l'ouvrir comme une application."},
+  instBtn:{ty:"",fr:"Installer"}, laterBtn:{ty:"",fr:"Plus tard"},
+  iosHome:{ty:"",fr:"Sur iPhone, Apple ne permet pas de remplacer l'écran d'accueil. Conseils : placez l'icône Marama Iti en bas de l'écran, et retirez les autres icônes de l'écran (appui long → Supprimer l'app → Retirer de l'écran d'accueil : elles restent dans la bibliothèque d'apps). Pour rester dans Marama Iti, activez l'Accès guidé : Réglages → Accessibilité → Accès guidé."},
+  iosRemind:{ty:"",fr:"Sur iPhone, les rappels de médicaments sonnent quand Marama Iti est ouverte. Pour être prévenu écran éteint, ajoutez aussi une alarme dans l'app Horloge à chaque heure de prise."},
+  iosAlarm:{ty:"",fr:"Sur iPhone, réglez le réveil dans l'app Horloge : ouvrez Horloge → Alarmes → touchez +, choisissez l'heure puis « Enregistrer »."},
+  iosApps:{ty:"",fr:"Raccourcis vers les applications de l'iPhone. Une application non installée ne s'ouvrira pas."},
   voiceNote:{ty:"",fr:"La voix lit le reo tahiti avec une voix française : la prononciation reste approximative."}
 };
 
@@ -601,6 +639,23 @@ const GUIDES = [
   ]}
 ];
 
+/* appareil : application Android, iPhone, ou navigateur */
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+const STANDALONE = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone===true;
+const IS_ANDROID_APP = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()==="android");
+const REAL = IS_ANDROID_APP || STANDALONE;   // installé chez quelqu'un : pas d'exemples
+/* Raccourcis vers les applications de l'iPhone (Apple ne permet pas de lister les applications) */
+const IOS_APPS = [
+  {name:"Messages", package:"sms:", color:"#34c759"},
+  {name:"WhatsApp", package:"whatsapp://", color:"#1f9a52"},
+  {name:"Photos", package:"photos-redirect://", color:"#e0812b"},
+  {name:"Plans", package:"maps://", color:"#3a8dde"},
+  {name:"Mail", package:"message://", color:"#2f7cf6"},
+  {name:"Musique", package:"music://", color:"#fa2d48"},
+  {name:"YouTube", package:"youtube://", color:"#c62828"},
+  {name:"Facebook", package:"fb://", color:"#3b5998"}
+];
+
 /* mémoire du téléphone (réglages famille) */
 const store = {
   get(k,d){ try{ const v=localStorage.getItem("marama-"+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
@@ -611,10 +666,13 @@ const DEFAULT_CONTACTS = [
   {n:"Teva", r:{ty:"Tamaiti",fr:"Fils"}, num:"89 65 43 21"},
   {n:"Dr Tetuanui", r:{ty:"Taote",fr:"Médecin"}, num:"40 50 60 70"}
 ];
-let CONTACTS = store.get("contacts", null) || DEFAULT_CONTACTS.map(c=>({...c}));
-let CONTACTS_EXAMPLE = !store.get("contacts", null);
+let CONTACTS = store.get("contacts", null) || (REAL ? [] : DEFAULT_CONTACTS.map(c=>({...c})));
+let CONTACTS_EXAMPLE = !store.get("contacts", null) && !REAL;
 const relText = r => typeof r==="string" ? esc(r) : T(r);
 
+/* Dépôt GitHub où sont publiées les nouvelles versions (APK dans « Releases »).
+   Si le code devient privé, mettez ici le dépôt public de téléchargement. */
+const UPDATE_REPO = "Brian-1844/marama-iti";
 const DEFAULT_SITES = [
   {n:"Météo", url:"https://www.meteo.pf/"},
   {n:"TNTV", url:"https://www.tntv.pf/"},
@@ -635,15 +693,15 @@ let RADIOS = store.get("radios", null) || DEFAULT_RADIOS.map(s=>({...s}));
 let PROFILE = store.get("profile", {name:"", msg:""});
 const COMPS = [{id:"matin",t:"08:00",ic:"sunrise",s:"cMatin"},{id:"midi",t:"12:00",ic:"sun",s:"cMidi"},{id:"soir",t:"19:00",ic:"sunset",s:"cSoir"},{id:"nuit",t:"21:30",ic:"moon",s:"cNuit"}];
 let BOX = store.get("pillbox", null);
-let PILLS = store.get("pills", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : [{n:"Tension", note:"1 comprimé avec le petit-déjeuner (exemple)", times:"08:00, 20:00"}]);
+let PILLS = store.get("pills", null) || (REAL ? [] : [{n:"Tension", note:"1 comprimé avec le petit-déjeuner (exemple)", times:"08:00, 20:00"}]);
 if(!BOX){
   BOX = COMPS.map(c=>({id:c.id, t:c.t, items:[]}));
-  const old = store.get("pills", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : null);
+  const old = store.get("pills", null) || (REAL ? [] : null);
   if(old===null){ BOX[0].items=[{n:"Tension (exemple)", q:"1 comprimé"}]; BOX[2].items=[{n:"Tension (exemple)", q:"1 comprimé"},{n:"Vitamine D (exemple)", q:"10 gouttes"}]; }
   else old.forEach(p=>{ if(!p.n) return; (p.times||"").split(/[,;]+/).forEach(s=>{ const m=/(\d{1,2})[:hH.](\d{2})/.exec(s); if(!m) return;
     const hr=+m[1], c = hr<11?0 : hr<15?1 : hr<20?2 : 3; BOX[c].items.push({n:p.n, q:p.note||""}); }); });
 }
-let AGENDA = store.get("agenda", null) || ((window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==="android") ? [] : [{date:new Date(Date.now()+86400000*2).toISOString().slice(0,10), time:"09:30", label:"Taote, Dr Tetuanui (exemple)"}]);
+let AGENDA = store.get("agenda", null) || (REAL ? [] : [{date:new Date(Date.now()+86400000*2).toISOString().slice(0,10), time:"09:30", label:"Taote, Dr Tetuanui (exemple)"}]);
 let LOG = store.get("log", {});      // { "AAAA-MM-JJ": { "pill:0:08:00": "08:04", "appt:...": "ok" } }
 let MOODS = store.get("moods", {});  // { "AAAA-MM-JJ": {v:1..4, t:"08:12"} }
 const WORDS = [
@@ -672,8 +730,9 @@ const DEMO_APPS = [
 
 /* ---------- état ---------- */
 const st = {lang:"both", view:"home", ex:null, text:"", guide:null, step:0, voice:false, scale:1,
-  apps: NATIVE ? null : DEMO_APPS, favs: store.get("favs", NATIVE ? [] : ["demo.camera","demo.whatsapp","demo.sms","demo.gallery","demo.meteo","demo.radio"]),
-  games: store.get("games", NATIVE ? [] : ["demo.solitaire","demo.crosswords","demo.sudoku"]),
+  apps: NATIVE ? null : IOS ? IOS_APPS : DEMO_APPS,
+  favs: store.get("favs", NATIVE ? [] : IOS ? ["whatsapp://","sms:","photos-redirect://","maps://"] : REAL ? [] : ["demo.camera","demo.whatsapp","demo.sms","demo.gallery","demo.meteo","demo.radio"]),
+  games: store.get("games", NATIVE||IOS||REAL ? [] : ["demo.solitaire","demo.crosswords","demo.sudoku"]),
   isDefault:null, battery:null, musicApp: store.get("musicApp",""), playing:null, mem:null, quiz:null, confirmRm:null, pin: store.get("pin", null), pinMode:"check", pinEntry:"", pinFirst:"", pinMsg:null};
 try{const s=JSON.parse(localStorage.getItem("marama-iti")||"{}"); if(s.lang)st.lang=s.lang; if(s.scale)st.scale=s.scale;}catch(e){}
 const save=()=>{try{localStorage.setItem("marama-iti",JSON.stringify({lang:st.lang,scale:st.scale}))}catch(e){}};
@@ -760,6 +819,7 @@ const contactRow = (c,i) => `<div class="contact"><div class="who"><strong>${esc
 const V = {
   home(){
     return `
+    ${installCard()}
     <section class="hero">
       ${SCENE}
       <div class="hello">
@@ -767,6 +827,7 @@ const V = {
         <div class="withsay" style="margin-top:8px"><div><h2>${T(greetObj())}</h2>${PROFILE.msg?`<p style="font-weight:700">${esc(PROFILE.msg)}</p>`:""}<p>${T(S.sub)}</p></div><button class="say" data-speak="@time" aria-label="Écouter l'heure">${ic("speaker")}</button></div>
       </div>
     </section>
+    ${updateCard()}
     ${moodCard()}
     <button class="mic" data-listen="1">${ic("mic")}<span>${plainTxt(S.speakT)}<small>${S.speakHint.fr}</small></span></button>
     ${st.playing?playerHTML():""}
@@ -855,7 +916,7 @@ const V = {
     return `<h2 style="font-family:var(--display);margin:0">${T(S.pillsT)}</h2>
       ${st.boxEdit?`<p class="note">${T(S.boxHelp)}</p>`:""}
       ${boxHTML()}
-      ${st.boxEdit?`<button class="big" data-boxdone="1">${T(S.doneEdit)}</button>`:`<p class="note">${T(S.takeEarly)}</p><button class="ghost" data-boxedit="1">✏ ${plainTxt(S.editBox)}</button>`}
+      ${st.boxEdit?`<button class="big" data-boxdone="1">${T(S.doneEdit)}</button>`:`<p class="note">${T(S.takeEarly)}</p>${IOS&&!NATIVE?`<p class="note">${T(S.iosRemind)}</p>`:""}<button class="ghost" data-boxedit="1">✏ ${plainTxt(S.editBox)}</button>`}
       <p class="note">${T(S.medNote)}</p>`;
   },
   agenda(){
@@ -941,7 +1002,7 @@ const V = {
     const home = NATIVE
       ? `<div class="status ${st.isDefault?"ok":"no"}">${ic(st.isDefault?"check":"alert")}<span>${T(st.isDefault?S.isHome:S.notHome)}</span></div>
          ${st.isDefault?"":`<button class="big" data-native="chooseDefault">${T(S.makeHome)}</button><p class="note">${T(S.makeHomeHelp)}</p>`}`
-      : `<p class="hint">${T(S.androidOnly)}</p>`;
+      : IOS ? `<p class="note" style="font-size:.95em">${T(S.iosHome)}</p>` : `<p class="hint">${T(S.androidOnly)}</p>`;
     const pickList = (sel, attr) => st.apps===null ? `<p class="hint">${T(S.loading)}</p>` :
       `<div class="setlist">${[...st.apps].sort((a,b)=>{const ia=sel.indexOf(a.package), ib=sel.indexOf(b.package);
          if(ia>-1||ib>-1) return (ia<0?999:ia)-(ib<0?999:ib); return a.name.localeCompare(b.name,"fr");})
@@ -964,13 +1025,16 @@ const V = {
         <p class="note">${T(S.recHelp)}</p></div>
       <div class="card stack"><h3>${T(S.pillsSet)}</h3><p class="note">${T(S.boxHelp)}</p><button class="ghost" data-boxedit="1">✏ ${plainTxt(S.editBox)}</button></div>
       <div class="card stack"><h3>${T(S.agendaSet)}</h3>${apptRows()}<button class="ghost" data-addl="agenda">+ ${plainTxt(S.addAppt)}</button></div>
-      <div class="card stack"><h3>${T(S.pickApps)}</h3><p class="note">${T(S.pickHelp)}</p>${apps}</div>
+      <div class="card stack"><h3>${T(S.pickApps)}</h3><p class="note">${T(S.pickHelp)}</p>${IOS&&!NATIVE?`<p class="note">${T(S.iosApps)}</p>`:""}${apps}</div>
       <div class="card stack"><h3>${T(S.contactsT)}</h3>${contacts}<button class="ghost" data-addc="1">+ ${plainTxt(S.add)}</button></div>
       <div class="card stack"><h3>${T(S.gamesSet)}</h3><p class="note">${T(S.gamesHelp)}</p>${pickList(st.games, "data-gfav")}</div>
       <div class="card stack"><h3>${T(S.gameLinksSet)}</h3><p class="note">${T(S.gameLinksHelp)}</p>${listRows("gamelinks",GAMELINKS)}<button class="ghost" data-addl="gamelinks">+ ${plainTxt(S.addGame)}</button></div>
       <div class="card stack"><h3>${T(S.sitesSet)}</h3>${listRows("sites",SITES)}<button class="ghost" data-addl="sites">+ ${plainTxt(S.addSite)}</button></div>
       <div class="card stack"><h3>${T(S.radiosSet)}</h3><p class="note">${T(S.radiosHelp)}</p>${listRows("radios",RADIOS)}<button class="ghost" data-addl="radios">+ ${plainTxt(S.addRadio)}</button></div>
       <div class="card stack"><h3>${T(S.musicSet)}</h3>${st.apps===null?`<p class="hint">${T(S.loading)}</p>`:`<label class="note" for="musicSel">${T(S.musicSet)}</label><select class="famselect" id="musicSel"><option value="">${plainTxt(S.none)}</option>${(st.apps||[]).map(a=>`<option value="${esc(a.package)}" ${st.musicApp===a.package?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`}</div>
+      <div class="card stack"><h3>${T(S.verT)}</h3>
+        <p style="margin:0;font-weight:700;font-variant-numeric:tabular-nums">${NATIVE?(st.appVersion?`${esc(st.appVersion.version)} (n° ${esc(String(st.appVersion.build))})`:"…"):"Version web"}</p>
+        ${NATIVE?`<button class="ghost" data-checkupd="1">${plainTxt(S.checkUpd)}</button>`:""}</div>
       <div class="card stack">
         <button class="ghost" data-changepin="1">${plainTxt(S.changePin)}</button>
         ${NATIVE?`<button class="ghost" data-native="openSettings">${plainTxt(S.androidSettings)}</button>`:""}
@@ -1223,6 +1287,45 @@ function handleCommand(raw){
   sheet(plainTxt(S.speakT), heard+`<div class="def">${T(S.notUnderstood)}</div><button class="ghost" data-listen="1">${plainTxt(S.speakT)}</button>`, S.close);
 }
 
+/* ---------- mises à jour de l'application Android ---------- */
+let deferredInstall=null;
+window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); deferredInstall=e; if(st.view==="home") render(); });
+function installCard(){
+  if(NATIVE || STANDALONE || store.get("instLater","")===dkey()) return "";
+  if(IOS) return `<div class="install"><h3>${T(S.instT)}</h3>
+    <ol class="steps"><li>${T(S.instIos1)} <span class="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5"/><path d="M5 11v9h14v-9"/></svg></span></li><li>${T(S.instIos2)}</li><li>${T(S.instIos3)}</li></ol>
+    <p class="note" style="margin:0">${T(S.instIosNote)}</p><button class="ghost" data-instlater="1">${plainTxt(S.laterBtn)}</button></div>`;
+  if(deferredInstall) return `<div class="install"><h3>${T(S.instT)}</h3><p style="margin:0">${T(S.instAndroid)}</p>
+    <button class="big" data-install="1">${plainTxt(S.instBtn)}</button><button class="ghost" data-instlater="1">${plainTxt(S.laterBtn)}</button></div>`;
+  return "";
+}
+function updateCard(){
+  if(!st.update) return "";
+  return `<div class="updbox"><h3>${ic("star")}<span>${T(S.updT)}</span></h3><p style="margin:0">${T(S.updD)}</p><button class="big" data-update="1">${plainTxt(S.updBtn)}</button></div>`;
+}
+function updateSheet(){
+  const u=st.update;
+  sheet(plainTxt(S.updT), `<ol class="steps"><li>${T(S.updStep1)}</li><li>${T(S.updStep2)}</li><li>${T(S.updStep3)}</li><li>${T(S.updStep4)}</li></ol>
+    <button class="big" data-url="${esc(u.url)}">${ic("next").replace('<svg','<svg style="width:26px;height:26px;vertical-align:middle;transform:rotate(90deg)"')} ${plainTxt(S.download)} · ${esc(u.name)}</button>`, S.close);
+}
+function checkUpdate(manual){
+  if(!NATIVE) return Promise.resolve();
+  if(!manual && store.get("updCheck","")===dkey() && !st.update) return Promise.resolve();
+  return CAP.nativePromise("App","getInfo",{}).then(info=>{
+    st.appVersion=info;
+    return fetch(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`, {headers:{Accept:"application/vnd.github+json"}})
+      .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(rel=>{
+        store.set("updCheck", dkey());
+        const n=+((/(\d+)\s*$/.exec(rel.tag_name||"")||[])[1]||0), mine=+(info.build||0);
+        const apk=(rel.assets||[]).find(a=>/\.apk$/i.test(a.name));
+        st.update = n>mine && apk ? {name: rel.name||rel.tag_name, url: apk.browser_download_url} : null;
+        if(["home","family"].includes(st.view)) render();
+        if(manual){ if(st.update) updateSheet(); else sheet(plainTxt(S.checkUpd), `<div class="def">${T(S.upToDate)}</div>`, S.close); }
+      });
+  }).catch(()=>{ if(manual) sheet(plainTxt(S.checkUpd), `<div class="def">${T(S.updFail)}</div>`, S.close); });
+}
+
 function openFamily(){
   st.pinEntry=""; st.pinMsg=null; st.pinMode = st.pin ? "check" : "create"; go("pin");
 }
@@ -1264,6 +1367,10 @@ document.addEventListener("click", e=>{
   if(t.dataset.go) return go(t.dataset.go);
   if(t.dataset.speak!==undefined){ sayNow(t.dataset.speak==="@time"?timeSentence():t.dataset.speak); return; }
   if(t.dataset.family) return openFamily();
+  if(t.dataset.update) return updateSheet();
+  if(t.dataset.instlater){ store.set("instLater", dkey()); return render(); }
+  if(t.dataset.install){ if(deferredInstall){ deferredInstall.prompt(); deferredInstall.userChoice.finally(()=>{ deferredInstall=null; render(); }); } return; }
+  if(t.dataset.checkupd) return checkUpdate(true);
   if(t.dataset.boxedit){ if(st.authed){ st.boxEdit=true; return go("pills"); } st.pinNext="box"; return openFamily(); }
   if(t.dataset.boxdone){ st.boxEdit=false; store.set("pillbox",BOX); scheduleSoon(); return render(); }
   if(t.dataset.boxadd!==undefined){ const i=+t.dataset.boxadd; BOX[i].items.push({n:"",q:""}); store.set("pillbox",BOX); render(); const el=document.getElementById(`box-n-${i}-${BOX[i].items.length-1}`); if(el) el.focus(); return; }
@@ -1278,6 +1385,7 @@ document.addEventListener("click", e=>{
   if(t.dataset.al){ const a=st.alarm, f=t.dataset.al; if(f[0]==="h") a.h=(a.h+(f[1]==="+"?1:23))%24; else a.m=(a.m+(f[1]==="+"?5:55))%60; return render(); }
   if(t.dataset.setalarm){ const a=st.alarm, msg=PROFILE.name?`Ia ora na ${PROFILE.name}`:"Marama Iti";
     if(NATIVE){ L("setAlarm",{hour:a.h, minute:a.m, message:msg}).catch(()=>sheet(plainTxt(S.alarmT), `<div class="def">${T({ty:"",fr:"L'horloge du téléphone n'a pas pu être ouverte."})}</div>`, S.close)); }
+    else if(IOS) sheet(plainTxt(S.alarmT), `<div class="def"><div style="font-size:1.6em;font-weight:800;margin-bottom:6px">${p2(a.h)}:${p2(a.m)}</div>${T(S.iosAlarm)}</div>`, S.close);
     else sheet(plainTxt(S.alarmT), `<div class="def">${T({ty:"",fr:`Dans l'application Android, le réveil sera réglé à ${p2(a.h)}:${p2(a.m)} dans l'horloge du téléphone.`})}</div>`, S.close);
     return; }
   if(t.dataset.rec){ const r=t.dataset.rec;
@@ -1306,6 +1414,7 @@ document.addEventListener("click", e=>{
   if(t.dataset.key) return pinKey(t.dataset.key);
   if(t.dataset.app){ const a=findApp(t.dataset.app);
     if(NATIVE){ L("launch",{package:t.dataset.app}).catch(()=>sheet(esc(a?a.name:""), `<div class="def">${T({ty:"'Aita i 'itehia.",fr:"Cette application n'est plus installée."})}</div>`, S.close)); return; }
+    if(IOS && a && /:/.test(a.package)){ location.href=a.package; return; }
     sheet(esc(a.name), `<div class="def">${T({ty:"",fr:S.openApp.fr+" « "+esc(a.name)+" »."})}</div>`, S.close); return; }
   if(t.dataset.fav){ const p=t.dataset.fav, i=st.favs.indexOf(p); if(i>-1) st.favs.splice(i,1); else st.favs.push(p);
     store.set("favs", st.favs); const y=scrollY; render(); scrollTo(0,y); return; }
@@ -1385,7 +1494,7 @@ render();
 setInterval(checkReminders, 20000);
 setTimeout(()=>{ checkReminders(); dailyGreeting(); }, 1500);
 document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible"){ checkReminders(true); dailyGreeting(); } });
-if(NATIVE){ CAP.nativePromise("LocalNotifications","requestPermissions",{}).catch(()=>{}).then(scheduleNotifs); }
+if(NATIVE){ CAP.nativePromise("LocalNotifications","requestPermissions",{}).catch(()=>{}).then(scheduleNotifs); setTimeout(()=>checkUpdate(false), 4000); }
 </script>
 
 <script>

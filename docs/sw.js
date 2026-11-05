@@ -1,7 +1,7 @@
 // Fonctionnement hors ligne : garde l'application en mémoire sur le téléphone.
 // Changez le numéro de version à chaque mise à jour de l'application.
-const CACHE = "maramaiti-v6";
-const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
+const CACHE = "maramaiti-v8";
+const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
